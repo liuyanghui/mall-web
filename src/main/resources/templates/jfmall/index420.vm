@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>积分联盟</title>
+<script>
+// auto adaptation
+(function() {
+	var w = window, d = document, de = d.documentElement, cw = 'clientWidth', ae = 'addEventListener', oc = 'orientationchange', rs = 'resize', dl = 'DOMContentLoaded';
+	var fs = 16, mw = de.getAttribute('data-pagewidth') || 750;
+	var as = function() { if (de[cw]) de.style.fontSize = 100*(de[cw]/mw)*16/fs +'px'; };
+	try { fs = parseInt(w.getComputedStyle(de,null).fontSize || 16, 10); } catch(e) {}
+	w[ae] && w[ae]((oc in w?oc:rs), as, false);
+	d[ae] && d[ae](dl, as, false);
+	as();
+})();
+</script>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<style>
+/* 自定义标题栏 */
+.mui-inner-wrap .mui-bar-nav { display:block; background:url($!{resource}/images/mall/navbg.png) no-repeat center center; height:1.54rem; background-size:100% 100%; }
+.mui-inner-wrap .mui-bar .mui-title { color:#fff; line-height:1rem; font-size:0.32rem; }
+.mui-inner-wrap .mui-bar .mui-icon { width:0.88rem; height:1rem; background-repeat:no-repeat; background-position:center center; background-size:0.36rem 0.38rem; }
+.mui-inner-wrap .mui-bar .mui-icon:active { opacity:1 }
+.mui-inner-wrap .mui-bar .mui-icon-account { background-image:url($!{resource}/images/icon/account.png); }
+.mui-inner-wrap .mui-bar .mui-icon-order { background-image:url($!{resource}/images/icon/order.png); }
+.mui-inner-wrap .mui-bar .mui-icon-cart { background-image:url($!{resource}/images/icon/cart.png); }
+.mui-bar-nav~.mui-content { padding-top:0; }
+.webview-wx .mui-inner-wrap .mui-bar .mui-title { display:none; }
+/* 左侧菜单 */
+.mui-off-canvas-wrap.mui-active .mui-off-canvas-backdrop { box-shadow:0 0 4px 0 rgba(0,0,0,.5); }
+.mui-off-canvas-wrap:not(.mui-slide-in).mui-scalable { background-color:#f1f1f1; }
+.mui-off-canvas-left { width:5rem !important; background-color:#f1f1f1; }
+.mui-off-canvas-left .account-view { padding:0.6rem 0 0.6rem 0.8rem; overflow:hidden; color:#666; }
+.mui-off-canvas-left .account-view img { float:left; width:1.4rem; height:1.4rem; margin-right:0.2rem; border-radius:0.7rem; }
+.mui-off-canvas-left .account-view p { padding-top:0.3rem; line-height:1.5; font-size:0.28rem; }
+.mui-off-canvas-left .account-view p span { color:#333; }
+.mui-off-canvas-left .mui-table-view { background:none; margin-left:1rem; width:2.5rem; color:#666; font-size:0.32rem; }
+.mui-off-canvas-left .mui-table-view:before,
+.mui-off-canvas-left .mui-table-view:after,
+.mui-off-canvas-left .mui-table-view-cell:after { display:none; }
+/* welcome */
+.mui-welcome { position:fixed; top:0; left:0; bottom:0; right:0; z-index:1000; }
+.mui-welcome { background-color:rgba(0,0,0,0.75); -webkit-transition:all 0.8s ease; transition:all 0.8s ease; }
+.mui-welcome.quit { -webkit-transform:translateY(-150%); transform:translateY(-150%); }
+.mui-welcome h3 { text-align:center; color:#fff; position:absolute; line-height:30px; left:0; right:0; top:50%; margin-top:-30px; font-size:16px; }
+/* demos */
+.section { overflow:hidden; margin-top:0.2rem; }
+.section img { display:block; width:100%; }
+.section h3 { margin:0; line-height:0.8rem; height:0.8rem; overflow:hidden; padding-left:0.4rem; font-size:0.32rem; color:#4A4A4A; font-weight:normal; background-color:#fff; position:relative; }
+.section h3:before { content:''; position:absolute; left:0; top:0.24rem; width:0.06rem; height:0.32rem; background-color:#3BBEFE; }
+.section h3 small { font-size:0.24rem; color:#FF5D42; margin-left:0.2rem; }
+.section p, .section ul { margin:0.2rem 0 0 0; }
+.section h3 + p, .section h3 + ul { margin-top:0; }
+.section.col2 a img { float:left; width:50%; }
+.section.col3 { padding-bottom:0.2rem; }
+.section ul { overflow:hidden; border-top:solid 1px #e7e7e7; padding:0; background-color:#fff; width:7.5rem; }
+.section li { float:left; width:2.48rem; padding:0.16rem 0; border-bottom:solid 1px #e7e7e7; position:relative; list-style:none; text-align:center; }
+.section li:after { position:absolute; content:''; background-color:#e7e7e7; top:0.16rem; bottom:0.16rem; left:-1px; width:1px; }
+.section li a { display:block; }
+.section li strong { font-size:0.22rem; color:#333; display:block; padding:0 0.1rem; }
+.section li span { display:block; font-size:0.18rem; color:#f00; }
+.section li img { width:1.6rem; height:1.6rem; margin:0 auto; float:none; }
+/* slide */
+.mui-slider { height:4.2rem; }
+.mui-popup-title + .mui-popup-text { font-size:0.48rem; padding:0.1rem 0; }
+</style>
+</head>
+<body>
+<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable mui-scalable">
+	<script type="text/template">
+	<aside id="offCanvasSide" class="mui-off-canvas-left">
+		<div id="offCanvasSideScroll" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="account-view">
+					{#!user}
+					<img src="{imgRoot}/defbuddy.jpg" />
+					<p>
+						你好！<br />
+						<a href="{loginUrl}">请先登录</a>
+					</p>
+					{/user}
+					{#user}
+					<img src="{imgRoot}/defbuddy.jpg" />
+					<p>
+						<span>#if($!{hidemobileid}!='') $!{hidemobileid} #else 你好！#end</span><br />
+						<a href="{logoutUrl}">退出登录</a>
+					</p>
+					{/user}
+				</div>
+				<ul class="mui-table-view">
+					{#menus}
+					<li class="mui-table-view-cell">
+						<a href="{link}" class="mui-navigate-right">{title}</a>
+					</li>
+					{/menus}
+				</ul>
+			</div>
+		</div>
+	</aside>
+	<!--主界面部分-->
+	<div class="mui-inner-wrap">
+		<header class="mui-bar mui-bar-nav">
+			<a href="#offCanvasSide" class="mui-action-menu mui-icon mui-icon-account mui-pull-left"></a>
+			<h1 class="mui-title">积分联盟</h1>
+			{#cartUrl}
+			<a href="{cartUrl}" class="mui-icon mui-icon-cart mui-pull-right">
+				{#cartCount}<span class="mui-badge">{cartCount}</span>{/cartCount}
+			</a>
+			{/cartUrl}
+			{#orderUrl}
+			<a href="{orderUrl}" class="mui-icon mui-icon-order mui-pull-right"></a>
+			{/orderUrl}
+		</header>
+		<div id="offCanvasContentScroll" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div id="slider" class="mui-slider" >
+					<div class="mui-slider-group mui-slider-loop">
+						{#firstSlide}
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a{#link} href="{link}"{/link}><img src="{imgUrl}" alt="{title}" /></a>
+						</div>
+						{/firstSlide}
+						{#slide}
+						<div class="mui-slider-item">
+							<a{#link} href="{link}"{/link}><img src="{imgUrl}" alt="{title}" /></a>
+						</div>
+						{/slide}
+						{#firstSlide}
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a{#link} href="{link}"{/link}><img src="{imgUrl}" alt="{title}" /></a>
+						</div>
+						{/firstSlide}
+					</div>
+					<div class="mui-slider-indicator">
+						{#slide}
+						<div class="mui-indicator{#active} mui-active{/active}"></div>
+						{/slide}
+					</div>
+				</div>
+				<div class="section col2">
+					{#events}
+					<a href="{link}"><img src="{imgUrl}" alt="{title}" /></a>
+					{/events}
+				</div>
+				<div class="section col2">
+					<h3>电子券<small>{cateTips}</small></h3>
+					{#ecard}
+					<a href="{link}"><img src="{imgUrl}" alt="{title}" /></a>
+					{/ecard}
+				</div>
+				<div class="section col3">
+					<h3>海淘品<small>{cateTips}</small></h3>
+					{#haitao}
+					{#special}
+					<p>
+						<a href="{link}"><img src="{imgUrl}" alt="{title}" /></a>
+					<p>
+					{/special}
+					{#!special}
+					<ul>
+						{#items}
+						<li>
+							<a href="{link}">
+								<strong class="mui-ellipsis">{title}</strong>
+								<span>{price}</span>
+								<img src="{imgUrl}" alt="{title}" />
+							</a>
+						</li>
+						{/items}
+					</ul>
+					{/special}
+					{/haitao}
+				</div>
+			</div>
+		</div>
+		<div class="mui-off-canvas-backdrop"></div>
+	</div>
+	</script>
+</div>
+<input type="hidden" name="islogin" id="islogin" value="$!{islogin}"/>
+<input type="hidden" name="hideMobile" id="hideMobile" value="$!{hidemobileid}"/>
+<script>
+// 临时关闭商品购买流程
+var hideMall = false;
+// 设置静态图片根目录
+var imgRoot = '../images';
+// 设置页面链接
+var pageLinks = {
+	login:   '../login/index.htm',    //登录
+	logout:  '../login/loginOut.htm',                               //退出
+	cart:    '', //购物车
+	order:   '../order/order.htm', // 我的订单
+	wallet:  '../wallet/index.htm',  // 积分钱包
+	account: '../member/index.htm', // 个人中心
+	message: '../news/message.htm', // 消息中心
+	contact: 'tel:13482854553',         // 联系客服
+	aboutus: '../about/us.htm',    // 关于我们
+	feedback:'../about/feedback.htm', // 问题反馈
+	checkin: '../activity/signin.htm',  // 每日签到
+	lottery: '../lottery/game.htm', // 积分抽奖
+	event1:  '../activity/gopresent.htm', //活动链接
+	event2:  '../activity/minglu.htm'
+};
+//
+var mobile = $("#hideMobile").val();
+var islogin = $("#islogin").val();
+var pageData = {
+	// 图片根目录
+	imgRoot: imgRoot,
+	// 页面地址
+	loginUrl:  pageLinks.login,
+	logoutUrl: pageLinks.logout,
+	orderUrl:  pageLinks.order,
+	// 登录用户
+	user: islogin,
+	// 左侧菜单
+	menus: [
+		{ title:'积分钱包', link:pageLinks.wallet },
+		{ title:'个人中心', link:pageLinks.account },
+		{ title:'消息中心', link:pageLinks.message },
+		{ title:'联系客服', link:pageLinks.contact },
+		{ title:'关于我们', link:pageLinks.aboutus }
+	//	{ title:'问题反馈', link:pageLinks.feedback }
+	],
+	// 头部轮播
+	slide: [
+		{ title:'积分上线', imgUrl:imgRoot+'/index/banner1.png', link:pageLinks.aboutus },		
+		{ title:'积分体验', imgUrl:imgRoot+'/index/banner2.png', link:pageLinks.event1 },	
+		{ title:'健康密码', imgUrl:imgRoot+'/index/banner3.png', link:pageLinks.event2}
+	],
+	// 积分盒子
+	events: [
+		{ title:'每日签到', imgUrl:imgRoot+'/index/checkin.png', link:pageLinks.checkin },
+		{ title:'积分抽奖', imgUrl:imgRoot+'/index/lottery.png', link:pageLinks.lottery },
+	],
+	// 电子券
+	ecard: [
+		{ merId:'S1000002', goodId:'6400000000000061', title:'京东50元京东E卡代金券', imgUrl:imgRoot+'/index/jd.jpg' },
+		{ merId:'S1000002', goodId:'6400000000000060', title:'汉堡王皇堡/天椒皇堡套餐', imgUrl:imgRoot+'/index/hbw.jpg' },
+		{ merId:'S1000002', goodId:'6400000000000059', title:'哈根达斯33元代金券', imgUrl:imgRoot+'/index/hgds.jpg' }
+	],
+	haitao: [
+	         {
+	            items: [
+	               { merId:'S1000001', goodId:'7014787127680208', title:'NMF针剂水库面膜', point:'200', cash:'77' },
+	               { merId:'S1000001', goodId:'7004174351051906', title:'自然乐园芦荟胶', point:'100', cash:'37' },
+	               { merId:'S1000001', goodId:'7021429863022042', title:'伊思蜗牛洗面奶', point:'300', cash:'79' },
+	               { merId:'S1000001', goodId:'3031212151041566', title:'SNP海洋燕窝面膜', point:'300', cash:'79' },
+	               { merId:'S1000001', goodId:'7014926015361247', title:'伊思晶钻蜗牛BB霜', point:'300', cash:'95' },
+	               { merId:'S1000001', goodId:'3083369543636504', title:'SNP钻石美白面膜25ml', point:'300', cash:'95' }
+	            ]
+	         },
+	         { merId:'S1000001', goodId:'3402459490733690', title:'Thesaem得鲜唇膏', imgUrl:imgRoot+'/index/hot1.jpg', special:true },
+	         {
+	            items: [
+	               { merId:'S1000001', goodId:'2556321580949162', title:'甘尼克宝贝抗敏湿巾', point:'200', cash:'67' },
+	               { merId:'S1000001', goodId:'3073785530478777', title:'叽叽兔动物造型水杯', point:'200', cash:'60' },
+	               { merId:'S1000001', goodId:'3679968100617619', title:'Mepra紫色树脂碗三件套', point:'300', cash:'85' },
+	               { merId:'S1000001', goodId:'3575404938801968', title:'贝奇尼克斯平底锅煎锅', point:'300', cash:'125' },
+	               { merId:'S1000001', goodId:'2996843368985293', title:'康宁耐热玻璃锅', point:'400', cash:'295' },
+	               { merId:'S1000001', goodId:'3039080605974143', title:'巴利牛皮手提单肩包', point:'550', cash:'5994' }
+	            ]
+	         },
+	         { merId:'S1000001', goodId:'3030996668875859', title:'九朵云奇迹马油霜', imgUrl:imgRoot+'/index/hot2.jpg', special:true }
+	      ]
+
+};
+var gotoUrl = function(href) {
+	if (href.indexOf('goods/') >= 0 && hideMall) {
+		mui.toast(pageData.cateTips);
+	} else {
+		location.href = href;
+	}
+};
+// 420特别处理
+if (stringUtil.getQueryValue('showmall')=='true') {
+	hideMall = false;
+}
+if (hideMall) {
+	pageData.cateTips = '预计4月30日开放购买，敬请期待';
+	pageData.slide = [
+		{ title:'积分上线', imgUrl:imgRoot+'/index/banner1.png', link:pageLinks.aboutus },		
+		{ title:'健康密码', imgUrl:imgRoot+'/index/banner3.png', link:pageLinks.event2 }
+	];
+}
+// 格式化banner数据
+pageData.slide[0].active = true;
+pageData.firstSlide = pageData.slide[0];
+// 格式化商品数据，生成商品链接
+pageData.ecard.map(function(item) {
+	item.link = 'goods/'+ item.goodId +'-'+ item.merId +'.htm';
+});
+pageData.haitao.map(function(item) {
+	if (item.special) {
+		item.link = 'goods/'+ item.goodId +'-'+ item.merId +'.htm';
+	} else if (item.items) {
+		item.items.map(function(item2) {
+			item2.link = 'goods/'+ item2.goodId +'-'+ item2.merId +'.htm';
+			item2.imgUrl = imgRoot +'/index/goods/'+ item2.goodId +'.jpg';
+			item2.price = item2.point +'积分+'+ item2.cash +'元';
+		});
+	}
+});
+// 生成页面内容
+mui('#offCanvasWrapper').template(pageData);
+//页面链接点击
+if (hideMall) {
+    mui('a').each(function() {
+       this.onclick = function() { return false; }
+    });
+}
+
+// 页面链接点击
+mui('.mui-bar-nav, .mui-off-canvas-left, .section, .mui-slider').tap(function(e) {
+	var href = '';
+	if (e.target) {
+		var tag = e.target.tagName.toLowerCase();
+		if (tag =='a') {
+			href = e.target.href;
+			if (href.indexOf('tel:') >= 0) {
+				mui.confirm(href.split(':')[1], '客服热线', ['取消', '拨打'], function(e) {
+					if (e.index == 1) {
+						location.href = href.replace('-','');
+					}
+				});
+			} else if (href) {
+				gotoUrl(href);
+			}
+		} else if (e.target.parentNode && e.target.parentNode.tagName.toLowerCase()=='a') {
+			href = e.target.parentNode.href;
+			if (href) {
+				gotoUrl(href);
+			}
+		}
+	}
+	return false;
+});
+//
+mui('.mui-slider').slider({interval:1000 });
+mui('#offCanvasSideScroll').scroll();
+mui('#offCanvasContentScroll').scroll();
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

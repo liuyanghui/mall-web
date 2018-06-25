@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>订单详情</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script src="$!{resource}/js/member/member.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">订单详情</h1>
+</header>
+<div class="mui-content" style="margin-bottom: 40px;">
+   <div class="top_banner">
+      <div class="order_pic">
+      	#if($!{orderVo.paystatus}==0)
+      		<img src="../images/mall/pic_01.png" >
+		#elseif($!{orderVo.paystatus} == 2 && $!{orderVo.shipstatus} == 2)
+      		<img src="../images/mall/signin.png" >
+      	#elseif($!{orderVo.paystatus} == 2 && $!{orderVo.shipstatus} == 3)
+      		<img src="../images/mall/pic_01.png" >
+      	#elseif($!{orderVo.orderstatus} == 2)
+      		<img src="../images/mall/signin_02.png" >
+		#end
+      </div>  
+      <div class="order_title">
+      	#if($!{orderVo.paystatus}==0)
+        	<h3>您尚未付款</h3>
+		#elseif($!{orderVo.paystatus} == 2 && $!{orderVo.shipstatus} == 2)
+        	<h3>订单已完成</h3>
+        #elseif($!{orderVo.paystatus} == 2 && $!{orderVo.shipstatus} == 3)
+        	<h3>等待发货</h3>
+        #elseif($!{orderVo.orderstatus} == 2)
+        	<h3>订单已经取消</h3>
+		#end
+      </div>
+  </div>
+  <div class="phone_texe">接收手机：$!{hidemobileid}</div>
+  <div class="pro_box">
+   <div class="number">订单编号：$!{orderVo.trace}</div>
+   <div class="pro_main">
+       <div class="pro_inner">
+         <div class="pro_pic">
+         <img src="$!{staticDomain}/$!{orderVo.centerpic}">
+         </div>
+         <div class="pro_name">$!{orderVo.goodsname}</div>
+       </div>
+   <div class="pro_price">
+	   #if($!{orderVo.paytype}=="points")
+	    $!{orderVo.points}积分
+	  #elseif($!{orderVo.paytype}=="cash")
+		$!{orderVo.real_amount_yuan}元
+	  #elseif($!{orderVo.paytype}=="comb")
+		$!{orderVo.points}积分+$!{orderVo.real_amount_yuan}元
+	  #else
+		价格待定
+	  #end
+		  <br><span class="font6">x1</span></div>
+   <div style=" clear:both"></div>
+  </div>
+  <div class="pro_detail">
+    <ul>
+         <li>商品总金额：<span class="right_text" style="width:200px;">
+         #if($!{orderVo.paytype}=="points")
+		    $!{orderVo.points}积分
+		 #elseif($!{orderVo.paytype}=="cash")
+			$!{orderVo.real_amount_yuan}元
+		 #elseif($!{orderVo.paytype}=="comb")
+			$!{orderVo.points}积分+$!{orderVo.real_amount_yuan}元
+		 #else
+			价格待定
+		 #end
+         </span></li>
+         <li>运费：<span class="right_text">￥0.00</span></li>
+         <li>优惠减免：<span class="right_text">￥0.00</span></li>
+         <li>实付金额（含运费）<span class="right_text red_font" style="width:auto;">
+         #if($!{orderVo.paystatus}== 0)
+         	  0.00
+         #elseif($!{orderVo.paystatus} == 2)
+         	  #if($!{orderVo.paytype}=="points")
+		    	$!{orderVo.points}积分
+			  #elseif($!{orderVo.paytype}=="cash")
+				$!{orderVo.real_amount_yuan}元
+			  #elseif($!{orderVo.paytype}=="comb")
+				$!{orderVo.points}积分+$!{orderVo.real_amount_yuan}元
+			  #else
+				价格待定
+			  #end
+		 #else
+		 	0.00
+         #end
+         </span></li>
+    </ul>
+  </div>
+  </div>
+</div>
+<nav class="mui-bar mui-bar-tab mui-bar-summary">
+		<div class="left_btn">
+        <a id="contactkf" href="tel:13482854553" class="btn_min">联系客服</a>
+			
+		</div>
+		#if($!{orderVo.paystatus}== 0)
+		<a href="javascript:void(0);" onclick="topay('$!{orderVo.trace}')" class="mui-btn-red mui-pull-right">
+			<span class="mui-tab-label">立即付款</span>
+		</a>
+		<!-- <a href="javascript:void(0);" class="mui-btn-red mui-pull-right">
+			<span class="mui-tab-label">立即付款</span>
+		</a> -->
+		#end
+	</nav>
+<script>
+mui('#contactkf').tap(function(e) {
+	var href = e.target.href;
+	mui.confirm(href.split(':')[1], '客服热线', ['取消', '拨打'], function(e) {
+		if (e.index == 1) {
+			location.href = href.replace('-','');
+		}
+	});
+});
+</script>
+</body>
+</html>

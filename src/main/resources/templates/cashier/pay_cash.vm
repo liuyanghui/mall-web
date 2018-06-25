@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>收银台</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<style>
+em { font-style:normal; color:#f00; font-weight:700; margin:0 3px; }
+.tar { text-align:right; }
+.title { margin:20px 15px 7px; color:#6d6d72; font-size:15px; }
+.mui-table-view-cell { font-size:14px; }
+.mui-input-range .mui-tooltip { font-size:16px; line-height:32px; top:28px; height:32px; background:none !important; border:none; }
+.mui-input-group .mui-input-row { height:auto;}
+.mui-input-row img { margin-right:5px; }
+.mui-radio input[type=radio] { top:13px; }
+.disabled { opacity:0.3; }
+.paypass { text-align:center; padding:10px 0; }
+.paypass span { display:inline-block; width:40px; height:40px; border:solid 1px #aaa; margin-left:-1px; position:relative; }
+.paypass span:before { content:''; position:absolute; left:50%; top:50%; width:10px; height:10px; font-size:1px; background-color:#333; margin-left:-5px; margin-top:-5px; border-radius:5px; }
+.disabled { position:relative; opacity:0.3; }
+.disabled:after { content:''; position:absolute; left:0; top:0; right:0; bottom:0; background-color:rgba(0,0,0,0); }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">收银台</h1>
+</header>
+<div class="mui-content">
+   <div class="pay_top">
+         <div class="pro_pic"><img src="$!{staticDomain}/$!{order.centerpic}"></div>
+           <div class="pay_detail">
+              <ul >
+                <li class="pro_name">$!{order.goodsname}</li>
+                <li><span class="red_font">
+					$!{price}元
+                </span> <span class="right_text font6">x1</span></li>      
+              </ul>              
+        </div>
+         <div style=" clear:both"></div>
+    </div>
+<div class="pay_box disabled">
+  <div class="delivery_title">积分付款：<span class="red_font">0</span>元（0积分）</div> 
+  <div class="mui-card_main pay_main">
+    		<div class="mui-input-row">
+				<span>
+					<img src="../../images/icon_jflm.png" style="width:28px;vertical-align:middle;" /> 联盟积分
+				</span>
+				<span class="pay_n"><span id="block-range-val" class="pay_d">0</span>积分</span>
+			</div>
+	        <div class="mui-input-row mui-input-range" style="display:none">
+	            <input type="range" id='block-range' value="0" min="0" max="$!{leftpoints}" >
+	        </div>
+            <div class="integral_box">
+             <div class="integral_line">
+              <div class="integral_line" style=" width:5%;">
+              <div class="integral_now">
+                <div class="round"></div>
+                 <div class="round_text"></div>
+              </div>
+             </div>
+             <div style=" clear:both"></div>
+            <div class="integral_btm">
+                <span>0</span>
+				<span class="pay_n">$!{leftpoints}</span>
+            </div>
+            </div> 
+          </div>
+        </div>
+        </div>
+
+   <div id="payCash" class="pay_box">
+		<div class="delivery_title">现金付款：<span class="red_font">$!{price}</span>元</div>
+		<div class="mui-card">
+			<div class="mui-input-group">
+				
+				<div class="mui-input-row mui-radio mui-right">
+					<label><img src="../../images/icon_weixin.png" style="width:24px;vertical-align:middle;" /> 微信支付</label>
+					<input name="radio1" type="radio" checked />
+				</div>
+               
+			</div>
+		</div>
+	</div>
+
+
+
+ <div class="btn_box">
+   <button id="reg" class="mui-btn mui-btn-block mui-btn-primary btn_blue">确认支付</button>
+   
+   
+   </div>
+
+
+
+</div>
+ <!--...
+ <div class="mui-content">
+	<script type="text/template">
+	<ul class="mui-table-view" style="margin-top:0">
+		<li class="mui-table-view-cell">
+			{orderTitle}<br />
+			总金额： <em>{pointPrice}</em>积分 + <em>{cashPrice}</em>元
+		</li>
+	</ul>
+	{#pointPrice}
+	<div id="payPoint">
+		<div class="title tar">积分付款：<em>{pointPrice2}</em>元({pointPrice}积分)</div>
+		<div class="mui-card" style="padding:20px 10px;">
+			<div class="mui-input-row">
+				<span>
+					<img src="../images/icon_jflm.png" style="width:32px;vertical-align:middle;" /> 联盟积分
+				</span>
+				<span class="mui-pull-right"><span id='block-range-val' style="font-size:18px;margin-right:5px;">{pointPrice}</span>积分</span>
+			</div>
+	        <div class="mui-input-row mui-input-range">
+	            <input type="range" id='block-range' value="{pointPrice}" min="0" max="{maxPoint}" >
+	        </div>
+		</div>
+	</div>
+	{/pointPrice}
+	{#cashPrice}
+	<div id="payCash">
+		<div class="title tar">现金付款： <em>{cashPrice}</em>元</div>
+		<div class="mui-card">
+			<div class="mui-input-group">
+				<div class="mui-input-row mui-radio mui-right">
+					<label><img src="../images/icon_he.png" style="width:32px;vertical-align:middle;" /> 和包支付</label>
+					<input name="radio1" type="radio" />
+				</div>
+				<div class="mui-input-row mui-radio mui-right">
+					<label><img src="../images/icon_weixin.png" style="width:32px;vertical-align:middle;" /> 微信支付</label>
+					<input name="radio1" type="radio" checked />
+				</div>
+			</div>
+		</div>
+	</div>
+	{/cashPrice}
+	<div class="mui-content-padded" style="margin-top:15px">
+		<a id="btnPay" class="mui-btn mui-btn-block mui-btn-primary">确认支付</a>
+	</div>
+	</script>
+</div>
+<script>
+var payData = JSON.parse(sessionStorage.getItem('jflm.pay') || '{}');
+payData.pointPrice2 = payData.pointPrice / 100;
+payData.maxPoint = payData.pointPrice * 3;
+if (payData.items.length > 1) {
+	payData.orderTitle = payData.items[0].title +'等，共'+ payData.count +'件';
+} else {
+	payData.orderTitle = payData.items[0].title +'，共'+ payData.count +'件';
+}
+mui('.mui-content').template(payData);
+mui('#btnPay').tap(function() {
+	if (mui('#payPoint')[0] && mui('#payPoint')[0].className == 'disabled') {
+		mui.confirm('即将跳转微信支付<br/>支付金额为'+ payData.cashPrice +'元', '积分支付完成', ['更换支付方式', '去支付'], function(e) {
+			if (e.index == 1) {
+				location.href = 'pay_success.html';
+			}
+		});
+		return false;
+	}
+	if (payData.pointPrice) {
+		mui.confirm('<div class="paypass"><span></span><span></span><span></span><span></span><span></span><span></span></div><p style="width:240px;margin:0 auto;text-align:right;"><a>忘记密码</a></p>', '请输入积分支付密码', function(e) {
+			if (e.index == 1) {
+				if (payData.cashPrice > 0) {
+					mui('#payPoint').addClass('disabled');
+					mui.confirm('即将跳转微信支付<br/>支付金额为'+ payData.cashPrice +'元', '积分支付完成', ['更换支付方式', '去支付'], function(e) {
+						if (e.index == 1) {
+							location.href = 'pay_success.html';
+						}
+					});
+				} else {
+					location.href = 'pay_success.html';
+				}
+			}
+		});
+	} else {
+		location.href = 'pay_success.html';
+	}
+});
+var rangeList = document.querySelectorAll('input[type="range"]');
+for(var i=0,len=rangeList.length;i<len;i++){
+	rangeList[i].addEventListener('input',function(){
+	    if(this.id.indexOf('field')>=0){
+	        document.getElementById(this.id+'-input').value = this.value;
+	    }else{
+	        document.getElementById(this.id+'-val').innerHTML = this.value;
+	    }
+	});
+}
+</script>
+-->
+</body>
+</html>

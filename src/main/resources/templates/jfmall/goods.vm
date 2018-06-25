@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>商品详情</title>
+<script>
+// auto adaptation
+(function() {
+	var w = window, d = document, de = d.documentElement, cw = 'clientWidth', ae = 'addEventListener', oc = 'orientationchange', rs = 'resize', dl = 'DOMContentLoaded';
+	var fs = 16, mw = de.getAttribute('data-pagewidth') || 750;
+	var as = function() { if (de[cw]) de.style.fontSize = 100*(de[cw]/mw)*16/fs +'px'; };
+	try { fs = parseInt(w.getComputedStyle(de,null).fontSize || 16, 10); } catch(e) {}
+	w[ae] && w[ae]((oc in w?oc:rs), as, false);
+	d[ae] && d[ae](dl, as, false);
+	as();
+})();
+</script>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<link href="$!{resource}/css/icons-extra.css" rel="stylesheet" />
+<style>
+.mui-bar-nav { display:block !important; background:none; box-shadow:none; }
+.mui-bar-nav .mui-title { display:none; }
+.mui-bar-nav.mui-bar .mui-icon { background-color:#ddd; padding:5px; margin:10px 0; border-radius:17px; }
+.mui-bar-nav .mui-icon .mui-badge { top:-2px; right:-2px; }
+.mui-bar-nav~.mui-content { padding-top:0; }
+.mui-slider .mui-slider-group .mui-slider-item { text-align:center; }
+.mui-slider .mui-slider-group .mui-slider-item img { width:60%; }
+.mui-prod { padding:10px; background-color:#fff; }
+.mui-prod h3 { font-size:0.28rem; color:#333; }
+.mui-prod h4 { font-size:0.24rem; color:#999; font-weight:400; }
+.mui-prod p { margin:0; overflow:hidden; font-size:0.24rem; color:#666; }
+.mui-prod em { font-style:normal; }
+.mui-prod p span { float:left; width:50%; }
+.mui-prod .price span:first-child { color:#f00; font-size:0.28rem; }
+.mui-prod p span:last-child { text-align:right; }
+.mui-prod-tips { padding:0.1rem 0; margin-top:0.2rem; background-color:#fff; }
+.mui-prod-tips p { padding:0.1rem 0.2rem; margin:0; font-size:0.24rem; }
+.mui-card { margin:0.2rem 0 60px 0; border-radius:0; box-shadow:none; }
+.mui-card-content p { margin:0; }
+.mui-card-content img { display:block; width:100%; }
+.mui-bar-tab { box-shadow:none; }
+.mui-bar-tab .mui-tab-item { border:none; }
+.mui-bar-tab .mui-tab-item+.mui-tab-item { border-left:solid 1px #fff !important; }
+.mui-bar-tab .mui-tab-item.disabled { background-color:#ccc; }
+.mui-bar-tab .mui-tab-item.disabled .mui-tab-label { color:#999; }
+.mui-tab-label { color:#fff; }
+.mui-btn-red.mui-active:disabled,
+.mui-btn-red:enabled:active,
+.mui-btn-yellow.mui-active:enabled,
+.mui-btn-yellow:enabled:active { border:none; }
+</style>
+</head>
+<body>
+<div id="detailWrapper">
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">商品详情</h1>
+	</header>
+	<div class="mui-content">
+		<div id="slider" class="mui-slider" >
+			<div class="mui-slider-group">
+				<div class="mui-slider-item mui-slider-item-duplicate"><img src="$!{staticDomain}/$!{goods.bigpic}"></div>
+			</div>
+			<script type="text/template">
+			<div class="mui-slider-group mui-slider-loop">
+				{#firstSlide}
+				<div class="mui-slider-item mui-slider-item-duplicate"><img src="{imgUrl}" /></div>
+				{/firstSlide}
+				{#slide}
+				<div class="mui-slider-item"><img src="{imgUrl}" alt="{title}" /></div>
+				{/slide}
+				{#firstSlide}
+				<div class="mui-slider-item mui-slider-item-duplicate"><img src="{imgUrl}" /></div>
+				{/firstSlide}
+			</div>
+			<div class="mui-slider-indicator">
+				{#slide}
+				<div class="mui-indicator{#active} mui-active{/active}"></div>
+				{/slide}
+			</div>
+			</script>
+		</div>
+		<div class="mui-prod">
+			<h3>$!{goods.goodsname}</h3>
+			<h4>$!{goods.subtitle}</h4>
+			<p class="price">
+				<span>
+				#if($!{goodsPrice.paytype}=="points")
+					$!{goodsPrice.points}积分
+				#elseif($!{goodsPrice.paytype}=="cash")
+					$!{goodsPrice.price}元
+				#elseif($!{goodsPrice.paytype}=="comb")
+					$!{goodsPrice.points}积分+$!{goodsPrice.price}元
+				#else
+					价格待定
+				#end
+				</span>
+				<span>#if($!{goods.goodstype}!=1) 市场参考价： <del>$!{goods.marketprice}元</del> #end</span>
+			</p>
+			<p>
+				<span id="storage">库存： <em>$!{goods.storedcount}</em></span>
+				<span>运费： <em>免运费</em></span>
+			</p>
+		</div>
+		#if($!{goods.goodstype}==1)
+		<div class="mui-prod-tips">
+			<p>本商品为电子券类商品，一经售出，无法退货！</p>
+		</div>
+		#end
+		<div class="mui-card">
+			<div class="mui-card-header">商品详情</div>
+			<div class="mui-card-content">
+				$!{goods.description}
+			</div>
+		</div>
+		<nav class="mui-bar mui-bar-tab">
+			<a id="buyNow" href="../../../cashier/confirmorder/$!{goods.productid}.htm" class="mui-tab-item mui-btn-red #if($!{goods.storedcount}<=0) disabled #end">
+				<span class="mui-tab-label">立即购买</span>
+			</a>
+		</nav>
+	</div>
+</div>
+<script>
+var poppics = '$!{goods.poppic}';
+var slideItems = [];
+poppics.split('@@').map(function(item) {
+	if (item && item.indexOf('.')>0) {
+		slideItems.push({imgUrl: '/'+ item});
+	}
+});
+if (slideItems.length > 1) {
+	mui('#slider').template({
+		slide: slideItems,
+		firstSlide: slideItems[0]
+	});
+} else if (slideItems.length == 1) {
+	mui('#slider img')[0].setAttribute('src', slideItems[0].imgUrl);
+}
+
+	mui('#buyNow').tap(function() {
+		#if($!{goods.storedcount}>0)
+		location.href = this.href;
+		#end
+		return false;
+	});
+	mui('.mui-slider').slider({interval:1000 });
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

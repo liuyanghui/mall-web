@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div class="mui-backdrop" id="paypwddiv" style="display: none;">
+<div class="mask_box" >
+  <header class="mask_title">
+    <a id="closePwd" class=" mui-icon  mask_close" ></a>
+    <h1 class="mui-title">请输入支付密码</h1>
+  </header>
+  <div class="mask_main">
+    <table id="number_input" border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td class="input-item"></td>
+						<td class="input-item"></td>
+						<td class="input-item"></td>
+						<td class="input-item"></td>
+						<td class="input-item"></td>
+						<td class="input-item"></td>
+					</tr>
+				</tbody>
+			</table>
+			<form id="forgetpwdForm" name="forgetpwdForm" method="post" action="/member/update_paypwd.htm">
+			  <a href="javascript:void(0)" onclick="$('#forgetpwdForm').submit();" class="blue_link">忘记密码？</a>
+			  </form>
+			<table id="keyboard" border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td class="keyboard-number">1</td>
+						<td class="keyboard-number">2</td>
+						<td class="keyboard-number">3</td>
+					</tr>
+					<tr>
+						<td class="keyboard-number">4</td>
+						<td class="keyboard-number">5</td>
+						<td class="keyboard-number">6</td>
+					</tr>
+					<tr>
+						<td class="keyboard-number">7</td>
+						<td class="keyboard-number">8</td>
+						<td class="keyboard-number">9</td>
+					</tr>
+					<tr>
+						<td class="keboard-action" data-action="reset">reset</td>
+						<td class="keyboard-number">0</td>
+						<td class="keboard-action" data-action="cancel">cancel</td>
+					</tr>
+				</tbody>
+			</table>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+	mui.ready(function() {
+		// 数字索引
+		var activeIndex = 0;
+		// 密码结果
+		var resultValue = "";
+		// 所有输入框
+		var inputList = mui(".input-item");
+		// 所有数字键
+		var numberList = mui(".keyboard-number");
+		// 数字键盘点击事件
+		mui("#keyboard").on("tap", ".keyboard-number", function() {
+			if(activeIndex == 6) {
+				return;
+			}
+			var num = this.innerText;
+			addNumber(num);
+		});
+		mui("#keyboard").on("tap", ".keboard-action", function() {
+			var value = this.getAttribute("data-action");
+			switch(value) {
+				case "cancel":
+					if(activeIndex == 0) {
+						return;
+					}
+					cancelNumber();
+					break;
+				case "reset":
+					resetInput();
+					break;
+				default:
+					break;
+			}
+		});
+		// 添加数字
+		function addNumber(num) {
+			inputList[activeIndex].innerText = "●";
+			resultValue += num;
+			activeIndex++;
+			// 检测密码长度
+			if(activeIndex == 6) {
+					var exponent = $("#exponent").val();
+					var modulus = $("#module").val();
+					var trace = $("#t").val();
+					var inputpwd = resultValue;
+					var ret =/^\d{6}$/;
+					if(!ret.test(inputpwd)){
+						mui.toast('请输入6位数字积分支付密码',{ duration:'1000', type:'div' });
+						return;
+				    }
+					
+					//前段加密
+					 var publicKey = RSAUtils.getKeyPair(exponent, '', modulus);
+					 var pwd = RSAUtils.encryptedString(publicKey, inputpwd);
+					 
+					 $.post(
+							"/cashier/pointspay.htm",
+							{pwd:pwd,t:trace}
+							,function(result){
+								if(result.paytype == "wxpay"){
+									//微信支付 弹出微信支付框
+									if(result.ret == "0000"){
+										var param = JSON.parse(result.wxjspara);
+										wxpay(param,trace);
+									}else{
+										mui.toast("支付失败",{ duration:'1', type:'div' });
+									}
+								}else if(result.ret == "0000"){
+									//跳转到支付结果页面
+									tourl("/web/pay/result.htm");
+								}else {
+									mui.toast(result.msg,{ duration:'1', type:'div' });
+								}
+								resetInput();
+						});
+			}
+		}
+		// 撤销数字
+		function cancelNumber() {
+			activeIndex--;
+			inputList[activeIndex].innerText = "";
+			resultValue = resultValue.substring(0, resultValue.length - 1);
+		}
+		// 密码框置空
+		function resetInput() {
+			activeIndex = 0;
+			resultValue = "";
+			mui(".input-item").each(function(index, element) {
+				element.innerText = "";
+			});
+		}
+		
+	});
+	 mui('.mask_title, .mask_close').tap(function(e) {
+		 $("#paypwddiv").hide();
+	 });
+</script>
+</body>
+</html>

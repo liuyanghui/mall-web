@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>收银台</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css?2017426" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!{resource}/js/security.js"></script>
+<script type="text/javascript" src="$!{resource}/js/pay/pay.js?20174282"></script>
+<style>
+em { font-style:normal; color:#f00; font-weight:700; margin:0 3px; }
+.tar { text-align:right; }
+.title { margin:20px 15px 7px; color:#6d6d72; font-size:15px; }
+.mui-table-view-cell { font-size:14px; }
+.mui-input-range .mui-tooltip { font-size:16px; line-height:32px; top:28px; height:32px; background:none !important; border:none; }
+.mui-input-group .mui-input-row { height:auto;}
+.mui-input-row img { margin-right:5px; }
+.mui-radio input[type=radio] { top:13px; }
+.disabled { opacity:0.3; }
+.paypass { text-align:center; padding:10px 0; }
+.paypass span { display:inline-block; width:40px; height:40px; border:solid 1px #aaa; margin-left:-1px; position:relative; }
+.paypass span:before { content:''; position:absolute; left:50%; top:50%; width:10px; height:10px; font-size:1px; background-color:#333; margin-left:-5px; margin-top:-5px; border-radius:5px; }
+.disabled { position:relative; opacity:0.3; }
+.disabled:after { content:''; position:absolute; left:0; top:0; right:0; bottom:0; background-color:rgba(0,0,0,0); }
+</style>
+</head>
+<script type="text/javascript">
+function closePwd(){
+	alert(5);
+}
+</script>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">收银台</h1>
+</header>
+<div class="mui-content">
+   <div class="pay_top">
+         <div class="pro_pic"><img src="$!{staticDomain}/$!{order.centerpic}"></div>
+           <div class="pay_detail">
+              <ul >
+                <li class="pro_name">$!{order.goodsname}</li>
+                <li><span class="red_font">
+					$!{points}积分
+                </span> <span class="right_text font6">x1</span></li>      
+              </ul>              
+        </div>
+         <div style=" clear:both"></div>
+    </div>
+<div class="pay_box">
+  <div class="delivery_title">积分付款：<span class="red_font">$!{points2yuan}</span>元（$!{points}积分）</div> 
+  <div class="mui-card_main pay_main">
+    		<div class="mui-input-row">
+				<span>
+					<img src="$!{resource}/images/icon_jflm.png" style="width:28px;vertical-align:middle;" /> 联盟积分
+				</span>
+				<span class="pay_n"><span id="block-range-val" class="pay_d">$!{points}</span>积分</span>
+			</div>
+	        <div class="mui-input-row mui-input-range" style="display:none">
+	            <input type="range" id='block-range' value="{pointPrice}" min="0" max="{maxPoint}" >
+	        </div>
+            <div class="integral_box">
+             <div class="integral_line">
+             #set($process=$!{points}*100/$!{leftpoints})
+              <div class="integral_line" style=" width:$!{process}%;">
+              <div class="integral_now">
+                <div class="round"></div>
+                 <div class="round_text">$!{points}</div>
+              </div>
+             </div>
+             <div style=" clear:both"></div>
+            <div class="integral_btm">
+                <span>0</span>
+				<span class="pay_n">$!{leftpoints}</span>
+            </div>
+            </div> 
+          </div>
+        </div>
+        </div>
+
+   <div id="payCash" class="pay_box disabled">
+		<div class="delivery_title">现金付款：<span class="red_font">0</span>元</div>
+		<div class="mui-card">
+			<div class="mui-input-group">
+				
+				<div class="mui-input-row mui-radio mui-right">
+					<label><img src="$!{resource}/images/icon_weixin.png" style="width:24px;vertical-align:middle;" /> 微信支付</label>
+					<input name="radio1" type="radio" checked />
+				</div>
+               
+			</div>
+		</div>
+	</div>
+
+ <div class="btn_box" >
+   <button id="reg" onclick="confirmPay();" class="mui-btn mui-btn-block mui-btn-primary btn_blue">确认支付</button>
+ </div>
+</div>
+#parse("cashier/inputpwd.vm")
+<input type="hidden" value="$!{hasPin}" name="hasPin" id="hasPin"/>
+<input type="hidden" value="$!{trace}" name="t" id="t"/>
+#if($!{hasPin})
+<input type="hidden" id="module" hidden="true"  value=${module} name="module">
+<input type="hidden" id="exponent" hidden="true" value=${empoent} name="exponent">
+#end
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

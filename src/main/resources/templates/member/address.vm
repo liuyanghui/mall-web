@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>收货地址管理</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script src="$!{resource}/js/member/member.js"></script>
+<style>
+.mui-table-view-cell h5 { color:#333; }
+.mui-table-view-cell h5 span { float:right; }
+.mui-table-view-cell p { color:#999; font-size:12px; }
+.mui-table-view-cell.active,
+.mui-table-view-cell.active .mui-slider-handle { background-color:#cef; }
+.mui-slider-right .mui-btn.mui-disabled { background-color:#ccc; }
+.address-tips { text-align:right;padding-right:15px;padding-top:15px; }
+.address-foot { text-align:center; padding:20px; }
+.address-foot p { color:#333; }
+.address-foot.empty { position:fixed; top:50%; left:0; right:0; margin-top:-20px; padding-top:0; }
+</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">收货地址管理</h1>
+</header>
+<div id="objview" class="mui-content">
+	<script type="text/template">
+	<input type="hidden" id="loginToken" hidden="true" style="display: none;" value="$!{loginToken}" name="loginToken">
+	{#!empty}
+	<p class="address-tips">向左滑动可进行地址相关操作</p>
+	{/empty}
+	{#items}
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell{#isdefault=1} active{/isdefault}">
+			<div class="mui-slider-right mui-disabled">
+				<a id="{addressid}" class="mui-btn mui-btn-yellow{#isdefault=1} mui-disabled{/isdefault}">设为默认</a>
+				<a href="address_edit/{addressid}.htm" class="mui-btn mui-btn-blue">修改</a>
+				<a id="{addressid}" class="mui-btn mui-btn-red{#isdefault=1} mui-disabled{/isdefault}">删除</a>
+			</div>
+			<div class="mui-slider-handle" data-addressId="{addressid}">
+				<h5><span>{mobileid}</span>{username}</h5>
+				<p>{address}</p>
+			</div>
+		</li>
+	</ul>
+	{/items}
+	<div class="address-foot{#empty} empty{/empty}">
+		<a href="address_add.htm?type=new" id="addaddress" class="mui-btn mui-btn-block mui-btn-primary"><span class="mui-icon mui-icon-plusempty">新增收货地址</span></a>
+		<p>您已创建了{count}个收货地址，最多可创建20个</p>
+	</div>
+	</script>
+</div>
+<script>
+var pageData = {
+	items: []
+};
+var addresslist = JSON.parse(sessionStorage.getItem($("#loginToken").val()+"-addresslist") || '[]');
+if(addresslist.length > 0){
+	pageData.items = addresslist;
+}else{
+	mui.ajax('/member/address.htm',{
+		dataType:'json',//服务器返回json格式数据
+		type:'post',//HTTP请求类型
+		timeout:10000,//超时时间设置为10秒；
+		async:false,
+		headers:{'Content-Type':'application/json'},	              
+		success:function(data){
+			if(data.ret == 'success'){
+				flag = true;
+				pageData.items = JSON.parse(data.msg || '[]').reverse();
+	      sessionStorage.setItem(data.loginToken+"-addresslist", data.msg);
+			}else{
+				flag = false;
+				mui.toast('查询收货地址失败',{ duration:'3000', type:'div' });
+			}
+			
+		},
+		error:function(xhr,type,errorThrown){
+			flag = false;
+			mui.toast('网络有问题,请稍后再试~',{ duration:'3000', type:'div' });
+		}
+	});
+}
+pageData.count = pageData.items.length;
+
+if (pageData.count>0) {
+	pageData.empty = false;
+} else {
+	pageData.empty = true;
+} 
+mui('.mui-content').template(pageData);
+//
+mui('.mui-btn-yellow').tap(function() {
+	var id = this.getAttribute("id");
+	var flag = false;
+	mui.ajax('/member/setdefault.htm',{
+		data:{
+			addressid:id
+		},
+		dataType:'json',//服务器返回json格式数据
+		type:'post',//HTTP请求类型
+		timeout:10000,//超时时间设置为10秒；
+		async:false,
+		headers:{'Content-Type':'application/json'},	              
+		success:function(data){
+			if(data.ret == 'success'){
+				flag = true;
+				var address = pageData.items;
+			    //alert(name);
+			    for (var i = 0; i < address.length; i++) {
+			        var cur_address = address[i];
+			        address[i].isdefault = 0;
+			        if (cur_address.addressid == id) {
+			            address[i].isdefault = 1;
+			        }
+			    }
+	            sessionStorage.setItem(data.loginToken+"-addresslist", JSON.stringify(address));
+			}else{
+				flag = false;
+				mui.toast(data.msg,{ duration:'3000', type:'div' });
+			}
+			
+		},
+		error:function(xhr,type,errorThrown){
+			flag = false;
+			mui.toast('网络有问题,请稍后再试~',{ duration:'3000', type:'div' });
+		}
+	});
+	if(flag){
+		var li = this.parentNode.parentNode;
+		mui('.active').removeClass('active');
+		li.classList.add('active');
+		mui('.mui-disabled').removeClass('mui-disabled');
+		this.classList.add('mui-disabled');
+		this.parentNode.getElementsByTagName("a")[2].classList.add('mui-disabled');
+		setTimeout(function() {
+			mui.swipeoutClose(li);
+		}, 0);
+	}
+}); 
+
+mui('.mui-btn-red').tap(function() {
+	var li = this.parentNode.parentNode, ul = li.parentNode;
+	var id = this.getAttribute("id");
+	var flag = false;
+	mui.confirm('确认删除该条记录？', '提示', function(e) {
+		if (e.index == 1) {
+			mui.ajax('/member/deleteaddress.htm',{
+				data:{
+					addressid:id
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				async:false,
+				headers:{'Content-Type':'application/json'},	              
+				success:function(data){
+					if(data.ret == 'success'){
+						flag = true;
+						var address = pageData.items;
+				        //alert(name);
+				        for (var i = 0; i < address.length; i++) {
+				            var cur_address = address[i];
+				            if (cur_address.addressid == id) {
+				            	address.splice(i, 1);
+				            }
+				        }
+			            sessionStorage.setItem(data.loginToken+"-addresslist", JSON.stringify(address));
+			            location.reload();
+					}else{
+						flag = false;
+						mui.toast(data.msg,{ duration:'3000', type:'div' });
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					flag = false;
+					mui.toast('网络有问题,请稍后再试~',{ duration:'3000', type:'div' });
+				}
+			});
+			if(flag){
+				ul.parentNode.removeChild(ul);
+			}
+		}else{
+			setTimeout(function() {
+				mui.swipeoutClose(li);
+			}, 0);
+		}
+		
+	});
+});
+if (stringUtil.getQueryValue('type') == 'select') {
+	document.title = '选择收货地址';
+	mui('.mui-bar-nav .mui-title').html('选择收货地址');
+	mui('.mui-slider-handle').tap(function() {
+		sessionStorage.setItem($("#loginToken").val()+"-addressid", this.getAttribute('data-addressId'));
+		history.back();
+	});
+	mui('.address-tips').html('点击列表选择收货地址，向左滑动进行地址修改');
+} else {
+	mui('.mui-slider-handle').tap(function() {
+		mui('.mui-table-view-cell').each(function() {
+			mui.swipeoutClose(this);
+		});
+	});
+}
+mui('.mui-table-view').on('slideleft', '.mui-table-view-cell', function(event) {
+	var that = this;
+	mui('.mui-table-view-cell').each(function() {
+		if (this != that) {
+			mui.swipeoutClose(this);
+		}
+	});
+});
+
+//点击新增收货地址的时候进行控制
+$("#addaddress").click(function(){
+	if(pageData.count == 20){
+		mui.toast('收货地址已经达到20个,不予许添加！',{ duration:'1', type:'div' });
+       	return false;
+	}
+	return true;
+});
+</script>
+</body>
+</html>

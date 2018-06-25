@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>积分联盟</title>
+<script>
+var getQueryJSON = function() {
+	var str = location.search, result = {};
+	if (str.indexOf('?') < 0) {
+		return result;
+	}
+	var query = str.substr(1), params = query.split('&'), len = params.length, param;
+	for (var i=0; i<len; i++) {
+		param = params[i].split('=');
+		result[param[0]] = param[1] || '';
+	}
+	return result;
+};
+var urlParams = getQueryJSON(), gurl = urlParams.gurl;
+var user = sessionStorage.getItem('jflm.user') || '';
+if (user) {
+	location.replace(gurl, true);
+} else {
+	sessionStorage.setItem('jflm.url', gurl);
+	location.replace('login.html', true);
+}
+</script>
+</head>
+</html>

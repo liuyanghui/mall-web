@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>我的卡券</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-icon mui-icon-left-nav mui-pull-left" href="$!{resource}/wallet/index.htm"></a>
+	<h1 class="mui-title">我的卡券</h1>
+</header>
+<div class="mui-content">
+#if($!{size}==0)
+ <div class="ecard_box">
+ 	暂无可用电子劵
+  </div>
+  #else
+  <div class="ecard_box">
+   请注意保管好您的电子券码
+   #foreach($ecard in $ecardList)
+   <div class="ecard_main">
+     <div class="eacrd_top"></div>
+    
+     <div class="ecard_title">
+     	当前电子券有效期至：$ecard.expiredate
+     	</div>
+     <div class="eacrd_m">
+       <div class="eacrd_m_l"></div>
+       <div class="eacrd_m_r"></div>   
+       <div class="eacrd_m_m"></div>
+  
+     </div>
+     <div class="ecard_inner">
+        <div class="ecard_detial">
+         <div class="ecard_l">$ecard.content</div>
+       <!--  <div class="ecard_r"><a href="#" class="btn_min_02">复制</a></div> -->
+        </div>
+     </div>
+     
+     <div class="ecard_btm"></div>
+    
+   </div>
+     #end
+   <div class="btn_box">
+  
+   <button id="reg" class="mui-btn mui-btn-block mui-btn-primary">关闭</button>
+   
+   </div>
+  </div>
+  #end
+	
+</div>
+<script>
+
+$("#reg").click(function(){
+	var gurl = sessionStorage.getItem('jflm.url') || '$!{resource}/wallet/index.htm';
+	sessionStorage.removeItem('jflm.url');
+	location.replace(gurl, true);	
+});
+</script>
+</body>
+</html>

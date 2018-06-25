@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>支付#if($!{order.paystatus}==2)成功#else失败#end</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<style>
+em { font-style:normal; color:#f00; font-weight:700; margin:0 3px; }
+.mui-pull-right { color:#999; }
+.mui-btn.mui-btn-block { height:40px; line-height:40px; padding:0; }
+.btn_box_02{  padding:10px 15px; color:#333;}
+.btn_box_02 .left_btn{ padding:10px;}
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<h1 class="mui-title">支付#if($!{order.paystatus}==2)成功#else失败#end</h1>
+</header>
+<div class="mui-content">
+	<div class="wallet-summary top_banner">
+	<span class="success_pic">
+	#if($!{order.paystatus}==2)
+	<img src="$!{resource}/images/mall/success.png">
+	#else
+	<img src="$!{resource}/images/mall/failure.png">
+	#end
+	</span>
+	<h3 >您的订单支付#if($!{order.paystatus}==2)成功#else失败#end </h3>
+	</div>
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			订单编号
+			<span class="mui-pull-right">$!{order.trace}</span>
+		</li>
+		<li class="mui-table-view-cell">
+			订单金额
+			<span class="mui-pull-right">
+				#if($!{order.paytype}=="points")
+					<em>$!{order.points}</em>积分
+				#elseif($!{order.paytype}=="cash")
+					<em>$!{order.amount}</em>元
+				#elseif($!{order.paytype}=="comb")
+					<em>$!{order.points}</em>积分+<em>$!{order.amount}</em>元
+				#end</span>
+		</li>
+		<li class="mui-table-view-cell">
+			下单时间
+			<span class="mui-pull-right">$!{order.intimestr}</span>
+		</li>
+	</ul>
+	<div class="btn_box_02" >
+		<div class="left_btn"><a href="/order/detail.htm?goodstype=$!{order.goodstype}&trace=$!{order.trace}" class="mui-btn mui-btn-block">查看订单</a ></div>
+		<div class="left_btn"><a href="/jfmall/index.htm" class="mui-btn mui-btn-block">继续购物</a ></div>
+	</div>
+</div>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

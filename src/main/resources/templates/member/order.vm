@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>我的订单</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script src="$!{resource}/js/member/member.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<style>
+em { font-style:normal; }
+.mui-segmented-control.mui-scroll-wrapper .mui-control-item { padding:0; margin-left:10px; }
+.mui-table-view + .mui-table-view { margin-top:10px; }
+.mui-table-view .mui-media-body p { color:#333; }
+.mui-slider { background:none; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">我的订单</h1>
+</header>
+<div class="mui-content">
+	<div id="slider" class="mui-slider mui-fullscreen">
+		<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+			<div class="mui-scroll">
+				<a #if($!{flag}== "all") class="mui-control-item mui-active" #else class="mui-control-item" #end href="#item1mobile">
+					全部订单
+				</a>
+				<a #if($!{flag}== "cash") class="mui-control-item mui-active" #else class="mui-control-item" #end href="#item2mobile">
+					待付款
+				</a>
+				<a #if($!{flag}== "fh") class="mui-control-item mui-active" #else class="mui-control-item" #end href="#item3mobile">
+					待发货
+				</a>
+				<a #if($!{flag}== "sh") class="mui-control-item mui-active" #else class="mui-control-item" #end href="#item4mobile">
+					待收货
+				</a>
+				<a class="mui-control-item" href="#item5mobile">
+					已完成
+				</a>
+				<a class="mui-control-item" href="#item6mobile">
+					已取消
+				</a>
+			</div>
+		</div>
+		<div class="mui-slider-group">
+			<div id="item1mobile" class="mui-slider-item mui-control-content">
+				<div id="scroll1" class="mui-scroll-wrapper">
+					<div class="mui-scroll" data-flag="">
+						#foreach($order in $orderList)
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell">
+									订单编号： $!{order.trace}
+									<span class="mui-pull-right">
+									#if($!{order.paystatus}== 0)
+										待付款
+									#elseif($!{order.paystatus}== 2 && $!{order.shipstatus}==3 )
+										待发货
+									#elseif($!{order.paystatus}== 2 && $!{order.shipstatus}==1)
+										待收货
+									#elseif($!{order.paystatus}== 3)
+										已取消
+									#elseif($!{order.paystatus}== 4)
+										失败
+									#elseif($!{order.paystatus}== 6)
+										退款
+									#elseif($!{order.paystatus}== 7)
+										部分退款
+									#elseif($!{order.paystatus}== 22)
+										退款成功
+									#elseif($!{order.paystatus}== 24)
+										退款失败
+									#elseif($!{order.paystatus}== 2 && $!{order.shipstatus}==2)
+										已完成
+									#elseif($!{order.orderstatus}== 2)
+										已取消
+									#end
+									</span>
+								</li>
+								<li class="mui-table-view-cell  mui-media">
+									<img class="mui-media-object mui-pull-left" src="$!{staticDomain}/$!{order.smallpic}" >
+									<div class="mui-media-body" onclick="torderdetail('$!{order.trace}','$!{order.goodstype}')">
+										<p class='prod-name mui-ellipsis'>$!{order.goodsname}</p>
+										<p class="prod-price">
+											<span>
+											<!-- <em class="point">$!{order.points}</em> -->
+											#if($!{order.paytype}=="points")
+												$!{order.points}积分
+											#elseif($!{order.paytype}=="cash")
+												$!{order.real_amount_yuan}元
+											#elseif($!{order.paytype}=="comb")
+												$!{order.points}积分+$!{order.real_amount_yuan}元
+											#else
+												价格待定
+											#end
+											<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+											</span>
+											<span class="mui-pull-right">X<em>1</em></span>
+										</p>
+									</div>
+								</li>
+								<li class="mui-table-view-cell">
+									<p style="text-align:right;color:#333;">
+										共1件商品，合计
+										<!-- <em class="point">$!{order.points}</em> -->
+										#if($!{order.paytype}=="points")
+											$!{order.points}积分
+										#elseif($!{order.paytype}=="cash")
+											$!{order.real_amount_yuan}元
+										#elseif($!{order.paytype}=="comb")
+											$!{order.points}积分+$!{order.real_amount_yuan}元
+										#else
+											价格待定
+										#end
+										<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+										
+										<br/>
+										#if($!{order.paystatus}== 0)
+											<a href="javascript:void(0);" onclick="topay('$!{order.trace}')" class="mui-btn mui-btn-blue">立即支付</a>
+<!-- 												<a href="javascript:void(0);" class="mui-btn mui-btn-blue">立即支付</a>-->	
+										#elseif($!{order.paystatus} == 2 && $!{order.shipstatus} == 1 && $!{order.goodstype} == 0)
+											<a href="javascript:void(0);" onclick="todelivery('$!{order.expressid}','$!{order.expressno}','$!{order.expressname}','$!{order.centerpic}','$!{order.trace}')" class="mui-btn">查看物流</a>
+											<a href="javascript:void(0);" onclick="toConfirm('$!{order.orderid}','$!{order.trace}','all')" class="mui-btn">确认收货</a>
+										#elseif($!{order.paystatus} == 2 && $!{order.shipstatus} == 2 && $!{order.goodstype} == 0)
+											<a href="javascript:void(0);" onclick="todelivery('$!{order.expressid}','$!{order.expressno}','$!{order.expressname}','$!{order.centerpic}','$!{order.trace}')" class="mui-btn">查看物流</a>
+										#end
+									</p>
+								</li>
+							</ul>
+						#end
+					</div>
+				</div>
+			</div>
+			<div id="item2mobile" class="mui-slider-item mui-control-content #if($!{flag}== 'cash') mui-active #end">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" data-flag="待付款">
+					#foreach($order in $orderList)
+						#if($!{order.paystatus}== 0)
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								订单编号： $!{order.trace}
+								<span class="mui-pull-right">待付款</span>
+							</li>
+							<li class="mui-table-view-cell  mui-media">
+								<img class="mui-media-object mui-pull-left" src="$!{staticDomain}/$!{order.smallpic}">
+								<div class="mui-media-body" onclick="torderdetail('$!{order.trace}','$!{order.goodstype}')">
+									<p class='prod-name mui-ellipsis'>$!{order.goodsname}</p>
+									<p class="prod-price">
+										<span>
+										<!-- <em class="point">$!{order.points}</em> -->
+										#if($!{order.paytype}=="points")
+											$!{order.points}积分
+										#elseif($!{order.paytype}=="cash")
+											$!{order.real_amount_yuan}元
+										#elseif($!{order.paytype}=="comb")
+											$!{order.points}积分+$!{order.real_amount_yuan}元
+										#else
+											价格待定
+										#end
+										<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+										</span>
+										
+										<span class="mui-pull-right">X<em>1</em></span>
+									</p>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<p style="text-align:right;color:#333;">
+									共1件商品，合计
+									<!-- <em class="point">$!{order.points}</em> -->
+									#if($!{order.paytype}=="points")
+										$!{order.points}积分
+									#elseif($!{order.paytype}=="cash")
+										$!{order.real_amount_yuan}元
+									#elseif($!{order.paytype}=="comb")
+										$!{order.points}积分+$!{order.real_amount_yuan}元
+									#else
+										价格待定
+									#end
+									<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+									<br />
+									<a href="javascript:void(0);" onclick="topay('$!{order.trace}')" class="mui-btn mui-btn-blue">立即支付</a>
+<!-- 										<a href="javascript:void(0);" class="mui-btn mui-btn-blue">立即支付</a> -->
+								</p>
+							</li>
+						</ul>
+						#end
+					#end
+					</div>
+				</div>
+			</div>
+			<div id="item3mobile" class="mui-slider-item mui-control-content #if($!{flag}== 'fh') mui-active #end">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" data-flag="待发货">
+					#foreach($order in $orderList)
+						#if($!{order.paystatus}== 2 && $!{order.shipstatus}==3)
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								订单编号： $!{order.trace}
+								<span class="mui-pull-right">待发货</span>
+							</li>
+							<li class="mui-table-view-cell  mui-media">
+								<img class="mui-media-object mui-pull-left" src="$!{staticDomain}/$!{order.smallpic}">
+								<div class="mui-media-body" onclick="torderdetail('$!{order.trace}','$!{order.goodstype}')">
+									<p class='prod-name mui-ellipsis'>$!{order.goodsname}</p>
+									<p class="prod-price">
+										<span>
+										<!-- <em class="point">$!{order.points}</em> -->
+										#if($!{order.paytype}=="points")
+											$!{order.points}积分
+										#elseif($!{order.paytype}=="cash")
+											$!{order.real_amount_yuan}元
+										#elseif($!{order.paytype}=="comb")
+											$!{order.points}积分+$!{order.real_amount_yuan}元
+										#else
+											价格待定
+										#end
+										<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+										</span>
+										<span class="mui-pull-right">X<em>1</em></span>
+									</p>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<p style="text-align:right;color:#333;">
+									共1件商品，合计
+									<!-- <em class="point">$!{order.points}</em> -->
+									#if($!{order.paytype}=="points")
+										$!{order.points}积分
+									#elseif($!{order.paytype}=="cash")
+										$!{order.real_amount_yuan}元
+									#elseif($!{order.paytype}=="comb")
+										$!{order.points}积分+$!{order.real_amount_yuan}元
+									#else
+										价格待定
+									#end
+									<!-- <em class="cash">$!{order.real_amount_yuan}</em>元(含运费0元) -->
+									<br />
+								</p>
+							</li>
+						</ul>
+						#end
+					#end
+					</div>
+				</div>
+			</div>
+			<div id="item4mobile" class="mui-slider-item mui-control-content #if($!{flag}== 'sh') mui-active #end">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" data-flag="待收货">
+					#foreach($order in $orderList)
+						#if($!{order.paystatus}== 2 && $!{order.shipstatus}==1)
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								订单编号： $!{order.trace}
+								<span class="mui-pull-right">待收货</span>
+							</li>
+							<li class="mui-table-view-cell  mui-media">
+								<img class="mui-media-object mui-pull-left" src="$!{staticDomain}/$!{order.smallpic}">
+								<div class="mui-media-body" onclick="torderdetail('$!{order.trace}','$!{order.goodstype}')">
+									<p class='prod-name mui-ellipsis'>$!{order.goodsname}</p>
+									<p class="prod-price">
+										<span>
+										<!-- <em class="point">$!{order.points}</em> -->
+										#if($!{order.paytype}=="points")
+											$!{order.points}积分
+										#elseif($!{order.paytype}=="cash")
+											$!{order.real_amount_yuan}元
+										#elseif($!{order.paytype}=="comb")
+											$!{order.points}积分+$!{order.real_amount_yuan}元
+										#else
+											价格待定
+										#end
+										<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+										</span>
+										<span class="mui-pull-right">X<em>1</em></span>
+									</p>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<p style="text-align:right;color:#333;">
+									共1件商品，合计
+									<!-- <em class="point">$!{order.points}</em> -->
+									#if($!{order.paytype}=="points")
+										$!{order.points}积分
+									#elseif($!{order.paytype}=="cash")
+										$!{order.real_amount_yuan}元
+									#elseif($!{order.paytype}=="comb")
+										$!{order.points}积分+$!{order.real_amount_yuan}元
+									#else
+										价格待定
+									#end
+									<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+									<br />
+									<a href="javascript:void(0);" onclick="todelivery('$!{order.expressid}','$!{order.expressno}','$!{order.expressname}','$!{order.centerpic}','$!{order.trace}')" class="mui-btn">查看物流</a>
+									<a href="javascript:void(0);" onclick="toConfirm('$!{order.orderid}','$!{order.trace}','sh')" class="mui-btn">确认收货</a> 
+								</p>
+							</li>
+						</ul>
+						#end
+					#end
+					</div>
+				</div>
+			</div>
+			<div id="item5mobile" class="mui-slider-item mui-control-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" data-flag="已完成">
+					#foreach($order in $orderList)
+						#if($!{order.paystatus}== 2 && $!{order.shipstatus}==2)
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								订单编号： $!{order.trace}
+								<span class="mui-pull-right">已完成</span>
+							</li>
+							<li class="mui-table-view-cell  mui-media">
+								<img class="mui-media-object mui-pull-left" src="$!{staticDomain}/$!{order.smallpic}">
+								<div class="mui-media-body" onclick="torderdetail('$!{order.trace}','$!{order.goodstype}')">
+									<p class='prod-name mui-ellipsis'>$!{order.goodsname}</p>
+									<p class="prod-price">
+										<span>
+										<!-- <em class="point">$!{order.points}</em> -->
+										#if($!{order.paytype}=="points")
+											$!{order.points}积分
+										#elseif($!{order.paytype}=="cash")
+											$!{order.real_amount_yuan}元
+										#elseif($!{order.paytype}=="comb")
+											$!{order.points}积分+$!{order.real_amount_yuan}元
+										#else
+											价格待定
+										#end
+										<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+										</span>
+										<span class="mui-pull-right">X<em>1</em></span>
+									</p>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<p style="text-align:right;color:#333;">
+									共1件商品，合计
+									<!-- <em class="point">$!{order.points}</em> -->
+									#if($!{order.paytype}=="points")
+										$!{order.points}积分
+									#elseif($!{order.paytype}=="cash")
+										$!{order.real_amount_yuan}元
+									#elseif($!{order.paytype}=="comb")
+										$!{order.points}积分+$!{order.real_amount_yuan}元
+									#else
+										价格待定
+									#end
+									<!-- <em class="cash">$!{order.real_amount_yuan}</em>元(含运费0元) -->
+									<br />
+									#if($!{order.paystatus} == 2 && $!{order.shipstatus} == 2 && $!{order.goodstype} == 0)
+									<a href="javascript:void(0);" onclick="todelivery('$!{order.expressid}','$!{order.expressno}','$!{order.expressname}','$!{order.centerpic}','$!{order.trace}')" class="mui-btn">查看物流</a>
+									#end
+								</p>
+							</li>
+						</ul>
+						#end
+					#end
+					</div>
+				</div>
+			</div>
+			<div id="item6mobile" class="mui-slider-item mui-control-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" data-flag="已取消">
+					#foreach($order in $orderList)
+						#if($!{order.orderstatus}==2)
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								订单编号： $!{order.trace}
+								<span class="mui-pull-right">已取消</span>
+							</li>
+							<li class="mui-table-view-cell  mui-media">
+								<img class="mui-media-object mui-pull-left" src="$!{staticDomain}/$!{order.smallpic}">
+								<div class="mui-media-body" onclick="torderdetail('$!{order.trace}','$!{order.goodstype}')">
+									<p class='prod-name mui-ellipsis'>$!{order.goodsname}</p>
+									<p class="prod-price">
+										<span>
+										<!-- <em class="point">$!{order.points}</em> -->
+										#if($!{order.paytype}=="points")
+											$!{order.points}积分
+										#elseif($!{order.paytype}=="cash")
+											$!{order.real_amount_yuan}元
+										#elseif($!{order.paytype}=="comb")
+											$!{order.points}积分+$!{order.real_amount_yuan}元
+										#else
+											价格待定
+										#end
+										<!-- <em class="cash">$!{order.real_amount_yuan}</em>元 -->
+										</span>
+										<span class="mui-pull-right">X<em>1</em></span>
+									</p>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								<p style="text-align:right;color:#333;">
+									共1件商品，合计
+									<!-- <em class="point">$!{order.points}</em> -->
+									#if($!{order.paytype}=="points")
+										$!{order.points}积分
+									#elseif($!{order.paytype}=="cash")
+										$!{order.real_amount_yuan}元
+									#elseif($!{order.paytype}=="comb")
+										$!{order.points}积分+$!{order.real_amount_yuan}元
+									#else
+										价格待定
+									#end
+									<!-- <em class="cash">$!{order.real_amount_yuan}</em>元(含运费0元) -->
+									<br />
+								</p>
+							</li>
+						</ul>
+						#end
+					#end
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<style>
+.emptyorder { text-align:center; padding:80px 0 0; }
+.emptyorder img { display:block; width:100%; margin-bottom:20px; }
+.emptyorder a.btn { background-color:#199bff; display:block; margin:20px auto 0; width:150px; line-height:40px; text-align:center; color:#fff; border-radius:6px; }
+</style>
+<script>
+if (stringUtil.getQueryValue('flag') == '') {
+	mui('.mui-control-item:first-child').addClass('mui-active');
+}
+// 空列表，增加空提示
+mui('.mui-scroll').each(function() {
+	if (this.innerHTML.trim()=='') {
+		this.innerHTML = '<p class="emptyorder"><img src="../images/mall/emptyorder.png" />暂无'+ this.getAttribute('data-flag') +'订单信息<a class="btn" href="../jfmall/index.htm">回首页逛逛</a></p>';
+	}
+});
+//确认收货之后的逻辑
+// mui('.mui-table-view').each(function() {
+// 	alert("a");
+	
+// });
+var deceleration = mui.os.ios?0.003:0.0009;
+mui('.mui-scroll-wrapper').scroll({
+	bounce: false,
+	indicators: true, //是否显示滚动条
+	deceleration: deceleration
+});
+
+//确认收货
+function toConfirm(orderid,trace,obj){
+	var flag = false;
+	mui.confirm('确认收货吗？', '提示', function(e) {
+		if (e.index == 1) {
+			$.post(
+				"/order/confirmreceipt.htm",
+				{orderid:orderid,trace:trace}
+				,function(result){
+					if(result.ret == "success"){
+						flag = true;
+						location.href='/order/order.htm?flag='+obj;
+//						var order = result.msg;
+//						var staticDomain = result.staticDomain;
+//						if(order!=null && order!=''){
+//							order = JSON.parse(order);
+//						}
+//						var ui = obj.parentNode.parentNode.parentNode;
+//						ui.remove();
+//  						var innerHtml = $("#item5mobile").childNodes[1].childNodes[1].innerHTML;
+//  						innerHtml = '<ul class="mui-table-view"><li class="mui-table-view-cell">订单编号： '+order.trace+' <span class="mui-pull-right">已完成</span></li>'+
+//  									'<li class="mui-table-view-cell  mui-media"><img class="mui-media-object mui-pull-left" src="'+staticDomain+'/'+order.smallpic'">'+
+//  									'<div class="mui-media-body" onclick="torderdetail('+order.trace+','+order.goodstype+')"><p class="prod-name mui-ellipsis">'+order.goodsname+'</p>'+
+//  									'<p class="prod-price"><span> #if('+order.paytype+'=="points")'+order.points+'积分#elseif('+order.paytype+'=="cash")'+order.real_amount_yuan+'元#elseif('+order.paytype+'=="comb")'+order.points+'积分+'+order.real_amount_yuan+'元#else价格待定#end'+
+//  									'</span><span class="mui-pull-right">X<em>1</em></span>'+
+//  									'</p></div></li><li class="mui-table-view-cell"><p style="text-align:right;color:#333;">共1件商品，合计'+
+//  									'#if('+order.paytype+'=="points")'+order.points+'积分#elseif('+order.paytype+'=="cash")'+order.real_amount_yuan+'元#elseif('+order.paytype+'=="comb")'+order.points+'积分+'+order.real_amount_yuan+'元#else价格待定#end'+
+//  									'<br />#if('+order.paystatus+' == 2 && '+order.shipstatus+' == 2 && '+order.goodstype+' == 0)<a href="javascript:void(0);" onclick="todelivery('+order.expressid+','+order.expressno+','+order.expressname+','+order.centerpic+','+order.trace+')" class="mui-btn">查看物流</a>#end</p></li></ul>'+innerHtml;
+					}else{
+						flag = false;
+						mui.toast(data.msg,{ duration:'3000', type:'div' });
+					}
+			});
+		}
+	});
+	}
+
+</script>
+</body>
+</html>

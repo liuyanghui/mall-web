@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>个人中心</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script src="$!{resource}/js/member/member.js"></script>
+<link href="$!{resource}/css/icons-extra.css" rel="stylesheet"/>
+<style>
+.account-info { padding:20px 0 5px; text-align:center; }
+.account-info img { display:block; width:80px; height:80px; border-radius:40px; margin:0 auto 5px; }
+.account-info p { font-size:14px; color:#333; }
+.account-info p em { font-style:normal; font-weight:bold; }
+.mui-table-view { margin-top:15px; }
+.mui-grid-view .mui-icon,
+.mui-grid-view .mui-icon-extra { position:relative; color:#69c; font-size:2.4em; }
+.mui-grid-view .mui-icon-extra .mui-badge { position:absolute; right:-15px; top:-5px; background:red; color:#fff; padding:1px 5px; font-size:10px; line-height:1.4; }
+</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">个人中心</h1>
+</header>
+<div class="mui-content">
+
+	<div class="account-info">
+		<img id="userPhoto" value="" src="/images/defbuddy.jpg" />
+		<p>你好  &nbsp;&nbsp<em>$!{hidemobileid}</em> </p>
+	</div>
+	<ul class="mui-table-view mui-grid-view">
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+			<a href="../order/order.htm?flag=cash">
+				<span class="mui-icon-extra mui-icon-extra-gold">
+				#if($!{nopay} !="0")
+					<span class="mui-badge">$!{nopay}</span> 
+				#else
+					<!-- <span class="mui-badge"></span> -->
+				#end
+				</span>
+				<div class="mui-media-body">待付款</div>
+			</a>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+			<a href="../order/order.htm?flag=fh">
+				<span class="mui-icon-extra mui-icon-extra-express">
+				#if($!{nosend} !="0")
+					<span class="mui-badge">$!{nosend}</span> 
+				#else
+					<!-- <span class="mui-badge"></span>  -->
+				#end 
+				</span>
+				<div class="mui-media-body">待发货</div>
+			</a>
+		</li>
+		<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+			<a href="../order/order.htm?flag=all">
+				<span class="mui-icon mui-icon-list"></span>
+				<div class="mui-media-body">全部订单</div>
+			</a>
+		</li>
+	</ul>
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			<a href="account.htm" class="mui-navigate-right">账户与安全</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="showaddress.htm" class="mui-navigate-right">收货地址</a>
+		</li>
+	</ul>
+</div>
+<script>
+</script>
+</body>
+</html>

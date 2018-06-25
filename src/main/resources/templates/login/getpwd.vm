@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>设置新密码</title>
+<link href="/css/mui.min.css" rel="stylesheet"/>
+<script src="/js/mui.min.js"></script>
+<script src="/js/jquery-1.7.2.min.js"></script>
+<script src="/js/jsencrypt.js"></script>  
+<script  type="text/javascript" src="/js/security.js"></script>
+
+
+<style>
+.mui-input-group { margin-top:10px;	}
+.mui-input-group:first-child { margin-top:20px; }
+.mui-input-group label { width:25%; }
+.mui-input-row label~input,
+.mui-input-row label~select,
+.mui-input-row label~textarea { width:75%; }
+.mui-checkbox input[type=checkbox],
+.mui-radio input[type=radio] { top:6px; }
+.mui-content-padded { margin-top:25px; }
+.mui-btn { padding:10px; }
+.link-area { display:block; margin-top:25px; text-align:center; }
+.spliter { color:#bbb; padding:0 8px; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">设置新密码</h1>
+</header>
+<div class="mui-content">
+	<div class="mui-input-group">
+		<div class="mui-input-row">
+			<label>手机</label>
+			<input id="mobile" type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号码" #if ($mobileid) value ="${mobileid}" #end />
+		</div>
+		<div class="mui-input-row">
+			<label>新密码</label>
+			<input id="password" type="password" class="mui-input mui-input-password" placeholder="8-20位字母和数字组合" />
+		</div>
+		<div class="mui-input-row">
+			<label>确认</label>
+			<input id="pwd" type="password" class="mui-input mui-input-password" placeholder="请确认新密码" />
+		</div>
+		<div class="mui-input-row">
+			<label>验证码</label>
+			<input id="authcode" type="text" class="mui-input" placeholder="请输入短信验证码" />
+			<button id="sendcode" class="mui-btn"   style="position:absolute;right:10px;top:6px;width:auto;padding:5px 10px;" >发送验证码</button>
+		</div>
+	</div>
+	<div class="mui-content-padded">
+		<button id="getPwd" class="mui-btn mui-btn-block mui-btn-primary">提交</button>
+	</div>
+	<input type="hidden" id="modulu" hidden="true"
+	style="display: none;" value=${module} name="module">
+	<input type="hidden" id="exponent" hidden="true"
+	style="display: none;" value=${empoent} name="exponent">
+</div>
+</body>
+<script src="/js/login/getpwd.js"></script> 
+</html>

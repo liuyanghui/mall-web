@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>每日签到</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script src="$!{resource}/js/activity/signin.js?v=2"></script>
+</head>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">每日签到</h1>
+</header>
+<input type="hidden" id="signinDays" value="$!{signinDays}"/>
+<input type="hidden" id="points" value="$!{points}">
+<input type="hidden" id="resource" value="$!{resource}">
+<div class="mui-content">
+	<div class="top_banner">
+      <div class="user_box">
+        <div class="user_pic"><img src="$!{resource}/images/mall/user_icon.png" ></div>
+        <div class="user_name">本周驾到<span class="red18">$!{signinDays}</span>天</div>
+      </div>
+      <div class="right_box">
+        <section id="signin">
+        #if($!isSigned)
+        <div class="signin"><a href="#" onclick="return false;">已签到</a></div>
+        #else
+        <div class="signin" onclick="javascript:doSignin();"><a href="#" onclick="return false;">签到</a></div>
+        #end
+        </section>
+        <div class="rules"><a id="rule">活动规则</a></div>
+      </div>
+  </div>
+<div class="signin_box">
+	#foreach($data in $!signinList)
+    #if($!data.isOver=='Yes')
+     	#if($!data.isSigned)
+    <div class="signin_main">
+     	<div class="signin_inner">
+     		<div class="result signed"><img src="$!{resource}/images/mall/signin.png" ></div>
+       	<div class="signin_text">$!data.day</div>
+       	<div class="signin_pic"><img src="$!{resource}/images/mall/gold.png" ></div>
+       	<div class="signin_btm yellow_bg"> $!{data.points}积分</div>  
+     	</div>
+   	</div>
+     	#else
+    <div class="signin_main">
+     	<div class="signin_inner">
+     		<div class="result"><img src="$!{resource}/images/mall/signin_02.png" ></div>
+       	<div class="signin_text">$!data.day</div>
+       	<div class="signin_pic"><img src="$!{resource}/images/mall/gold_02.png" ></div>
+       	<div class="signin_btm gray_bg"> $!{data.points}积分</div>  
+     	</div>
+   	</div>
+     	#end
+    #elseif($!data.isOver=='Equal')
+     	#if($!data.isSigned)
+    <div class="signin_main">
+    	<div class="signin_inner">
+     		<div class="result signed"><img src="$!{resource}/images/mall/signin.png" ></div>
+       	<div class="signin_text">$!data.day</div>
+       	<div class="signin_pic"><img src="$!{resource}/images/mall/gold.png" ></div>
+       	<div class="signin_btm yellow_bg">$!{data.points}积分</div> 
+     	</div>
+   	</div>
+     	#else
+    <div class="signin_main">
+     	<div class="signin_inner">
+    	 	<section id="signin_area" style="display:block">
+       		<div class="result"></div>
+       	 	<div class="signin_text">$!data.day</div>
+        	<div class="signin_pic"><img src="$!{resource}/images/mall/gold.png" ></div>
+        	<div class="signin_btm yellow_bg" onclick="javascript:doSignin();">签到</div>
+     		</section>
+     		<section id="signed_area" style="display:none">
+       		<div class="result signed"><img src="$!{resource}/images/mall/signin.png"></div>
+       	 	<div class="signin_text">$!data.day</div>
+        	<div class="signin_pic"><img src="$!{resource}/images/mall/gold.png" ></div>
+        	<div class="signin_btm yellow_bg">$!{data.points}积分</div>
+     		</section>
+     	</div>
+   	</div>
+     	#end
+    #else
+    <div class="signin_main">
+     	<div class="signin_inner">
+       	<div class="result"></div>
+        <div class="signin_text">$!data.day</div>
+        <div class="signin_pic"><img src="$!{resource}/images/mall/gold_02.png" ></div>
+        <div class="signin_btm yellow_bg02"> $!{data.points}积分</div>  
+     	</div>
+    </div>
+    #end
+  #end
+  <div class="signin_main_02">
+   <section id="signin_banner">
+	  #if($!{signinDays}==7)
+	     <div class="signin_banner" id="prize"><img src="$!{resource}/images/mall/signin_05.png" ></div>
+	  #else
+	    <div class="signin_banner" id="prize"><img src="$!{resource}/images/mall/signin_03.png" ></div>
+	  #end
+	  </section>
+    </div>
+ 	</div> 
+ 	<div class="banner_box"><a href="$!{resource}/lottery/game.htm"><img src="$!{resource}/images/mall/qdbanner.jpg"></a></div>
+  <div class="btm_text"><div class="btn_inner">主人，我是有底线的</div></div>
+</div>
+<div class="rule" id="srule">
+	<br/>
+		<h3>签到规则</h3>
+		 <a class=" mui-icon  mask_close" id="close" style="float:right;margin-right:15px;"></a>
+		<br/>
+		<br/>
+		<ul >
+			<li>每日来签到，积分送不停</li>
+			<li>每天签到即可获得$!{points}积分</li>
+			<li><span class="red_font">注：</span>本次活动有效期为2017年4月20日-2017年5月29日</li>
+			<li style="color:#1aa0ff;">积分联盟保留此次活动的最终解释权</li>
+			<div style=" clear:both"></div>
+		</ul>
+</div>
+<div class="rule" id="yprize">
+	<div class="reward_content" >
+	  <div class="close_icon"><a id="close2"><img src="../images/game/close.png" ></a></div>
+	  <div class="reward_gold"> <img src="../images/mall/sign_g.png"></div>
+	   <div class="reward_font">
+	     <p>恭喜您，连续签到<span class="red_font">7</span>天，获取神秘大奖
+	     <br/>$!{prizePoints}积分</p>
+	   </div>
+	   <div class="btn_signin" id="continue"><a href="#" onclick="return false;">继续坚持</a></div>
+	</div>
+</div>
+</body>
+<script>
+$('.rules').click(function() {
+	$("#srule").show();
+	$('html').css({"height":"100%","overflow":"hidden"});
+	$('body').css({"height":"100%","overflow":"hidden"});
+	return false;
+});
+$('#close').click(function() {
+	$("#srule").hide();
+	$('html').css({"overflow":"auto"});
+	$('body').css({"overflow":"auto"});
+	return false;
+});
+$('#continue').click(function() {
+	$("#yprize").hide();
+	$('html').css({"overflow":"auto"});
+	$('body').css({"overflow":"auto"});
+	return false;
+});
+$('#close2').click(function() {
+	$("#yprize").hide();
+	$('html').css({"overflow":"auto"});
+	$('body').css({"overflow":"auto"});
+	return false;
+});
+$('#prize').click(function() {
+	mui.toast('连续签到满一周才可以领哦', { duration:'long', type:'div' });
+});
+//
+checkSignStatus();
+</script>
+</html>

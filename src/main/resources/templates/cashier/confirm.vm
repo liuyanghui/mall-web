@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>确认订单</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<style>
+.fr { float:right; }
+em { font-style:normal; }
+.tar { text-align:right; }
+textarea { font-size:14px; }
+.mui-content { padding-bottom:60px; }
+.mui-table-view-cell { font-size:14px; }
+#receiverAddress h4 { font-size:16px; }
+#receiverMobile label { font-size:14px; }
+#receiverMobile .mui-radio.mui-left input[type=radio] { left:0; }
+#receiverMobile .mui-radio.mui-left label { padding-left:35px; }
+#receiverMobile .mui-radio.mui-left input[type=tel] { width:120px; border:solid 1px rgba(0,0,0,0.2) !important; float:none; }
+.title { margin:20px 15px 7px; color:#6d6d72; font-size:15px; }
+.mui-bar-tab { background-color:#fff; }
+.mui-bar-tab .summary { display:block; line-height:20px; font-size:14px; position:absolute; left:10px; right:110px; top:50%; -webkit-transform:translateY(-50%); transform:translateY(-50%); }
+.mui-bar-tab .mui-btn { height:50px; line-height:50px; padding:0; width:100px; border-radius:0; top:0; position:absolute; right:0; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">确认订单</h1>
+</header>
+<div class="mui-content">
+	<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+		#if($!{goodstype}==0)
+		<li id="receiverAddress" class="mui-table-view-cell">
+			<span class="mobile fr" id="address_mobileid"></span>
+			<h4>收货人： <span id="address_username"></span></h4>
+			<p class="address" id="address_address"></p>
+			<p class="tar"><a href="/member/showaddress.htm?type=select">使用其他地址 &gt;</a></p>
+		</li>
+		#else
+		<li id="receiverMobile" class="mui-table-view-cell">
+			<p>请使用一个手机号用来接收配送短信</p>
+			<div class="mui-input-row mui-radio mui-left">
+				<input name="mobileid" type="radio" value="1" checked />
+				<label>使用注册手机号码： $!{hideMobileid}</label>
+			</div>
+			<div class="mui-input-row mui-radio mui-left">
+				<input name="mobileid" type="radio" value="2" />
+				<label style="float:left;width:auto;">使用其他号码</label>
+				<input type="tel" id="telphone" />
+			</div>
+		</li>
+		#end
+	</ul>
+	<div class="title">本次下单商品</div>
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell mui-media">
+			<img class="mui-media-object mui-pull-left" src="$!{resource}/$!{goodsArray.smallpic}">
+			<div class="mui-media-body">
+				<p class='prod-name mui-ellipsis'>$!{goodsArray.goodsname}</p>
+				<p class="prod-price">
+					<span>
+						#if($!{goodsArray.paytype}=="points")
+							$!{goodsArray.points}积分
+						#elseif($!{goodsArray.paytype}=="cash")
+							$!{goodsArray.price}元
+						#elseif($!{goodsArray.paytype}=="comb")
+							$!{goodsArray.points}积分+$!{goodsArray.price}元
+						#else
+							价格待定
+						#end
+					</span>
+					<span class="mui-pull-right">X <em>$!{goodsArray.goodsnum}</em></span>
+				</p>
+			</div>
+		</li>
+	</ul>
+	<ul class="mui-table-view" style="margin-top:15px;">
+		<li class="mui-table-view-cell">
+			订单总金额:
+			<span class="mui-pull-right">$!{goodsArray.totalpriceStr}</span>
+		</li>
+		#if($!{goodstype}==0)
+		<li class="mui-table-view-cell">
+			运费:
+			<span class="mui-pull-right"><em>0</em>元</span>
+		</li>
+		#end
+	</ul>
+	#if($!{goodstype}==0)
+	<div class="title">订单备注</div>
+	<div class="row mui-input-row" style="background-color:#fff;width:100%;">
+		<textarea class="mui-input-clear question" style="border:none;margin-bottom:0;" id="remark" placeholder="如有其他需要，请留言"></textarea>
+	</div>
+	#end
+	<nav class="mui-bar mui-bar-tab mui-bar-summary">
+		<span class="summary">
+			您需要支付：$!{goodsArray.totalpriceStr}
+		</span>
+		<button id="btnPay" class="mui-btn mui-btn-red mui-pull-right">
+			去支付
+		</button>
+	</nav>
+</div>
+<script>
+var addressid = "";
+//获取收货地址
+function showAddress(){
+	var addressid_session = sessionStorage.getItem('$!{token}-addressid');
+	var addressList = JSON.parse(sessionStorage.getItem('$!{token}-addresslist')||'[]');
+	var address = '';
+	if(addressid_session == null || addressid_session.length == 0 || addressList.length == 0){
+		//sessionStorage为空，请求后台获取默认收货地址
+		getAddress();
+	}else{
+		//不用请求后台，直接展示
+		for(var i in addressList){
+			var item = addressList[i];
+			if(addressid_session == item.addressid){
+				address = item;
+				break;
+			}
+		}
+		addressdiv(address);
+	}
+}
+//请求后台获取默认收货地址
+function getAddress(){
+	mui.getJSON('/cashier/defaultaddress.htm',function(data){
+		addressdiv(data);
+	});
+}
+function addressdiv(data){
+	if(data != null){
+		addressid = data.addressid;
+		$("#address_mobileid").html(data.hidemobileid);
+		$("#address_username").html(data.username);
+		$("#address_address").html(data.address.replace("|",""));
+	}
+}
+$(document).ready(function(){
+	if($!{goodstype} == 0){
+		//实物，展示收货地址
+		showAddress();
+	}
+});
+
+mui('#btnPay').tap(function() {
+	var remark = $("#remark").val();
+	var price = $!{goodsArray.price} * 100;
+	var mobileid = $('input[name="mobileid"]:checked').val();
+	var telphone = '';
+	if($!{goodstype} == 1){
+		if(mobileid == '1'){
+			telphone = '$!{mobileid}';
+		}else{
+			telphone = $('#telphone').val();
+			var ret =/^1[3|4|5|7|8][0-9]\d{4,8}$/;
+	    	if(!ret.test(telphone)){
+	    		mui.toast('请输入11位正确的手机号',{ duration:'1', type:'div' });
+	        	return;
+	      	}
+		}
+	}else{
+		if(addressid == ""){
+			mui.toast('请选择收货地址',{ duration:'1', type:'div' });
+			return;
+		}
+	}
+	$('#btnPay').attr('disabled', 'disabled');
+	mui.ajax('../apply.htm',{
+		data:{
+			productid:'$!{goodsArray.productid}',
+			goodsname:'$!{goodsArray.goodsname}',
+			telphone:telphone,
+			addressid:addressid,
+			paytype:'$!{goodsArray.paytype}',
+			amount:price,
+			points:'$!{goodsArray.points}',
+			remark:remark
+		},
+		dataType:'json',//服务器返回json格式数据
+		type:'post',//HTTP请求类型
+		timeout:10000,//超时时间设置为10秒；
+		headers:{'Content-Type':'application/json'},	              
+		success:function(data){
+			if(data == '404'){
+				location.href = "/jfmall/index.htm";
+				return;
+			}
+			if(data.ret == '0000'){
+				//去支付
+				topay(data.msg);
+			}else{
+				mui.toast(data.msg,{ duration:'3000', type:'div' });
+				setTimeout(function(){ window.location.href = "/jfmall/index.htm"; },3000);
+			}
+			
+		},
+		error:function(xhr,type,errorThrown){
+			mui.toast('网络有问题？请重新下单~',{ duration:'3000', type:'div' });
+			location.href = "/jfmall/index.htm";
+		}
+	});
+//	location.href = this.href;
+	return false;
+});
+
+//支付页面
+function topay(t){
+	var temp = document.createElement("form");
+	temp.action = "/cashier/topay.htm";
+	temp.method = "post";
+	temp.style.display = "none";
+	var opt = document.createElement("input");
+	opt.name = "t";
+	opt.value = t;
+	temp.appendChild(opt);
+	document.body.appendChild(temp);
+	temp.submit();
+}
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

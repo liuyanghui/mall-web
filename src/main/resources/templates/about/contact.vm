@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>联系客服</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<style>
+.contact { text-align:center; padding:50px 0; color:#666; }
+.contact h3 { font-size:20px; margin-bottom:10px; }
+.title { margin:20px 15px 7px; color:#6d6d72; font-size:14px; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">联系客服</h1>
+</header>
+<div class="mui-content">
+	<div class="contact">
+		<h3>客服热线</h3>
+		<h1>${tel}</h1>
+	</div>
+</div>
+</body>
+</html>

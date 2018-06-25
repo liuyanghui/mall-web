@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>交易明细</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<link href="$!{resource}/css/mui.picker.css" rel="stylesheet"/>
+<link href="$!{resource}/css/mui.dtpicker.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-icon mui-icon-left-nav mui-pull-left" href="$!{resource}/index.htm"></a>
+	<h1 class="mui-title">交易明细</h1>
+
+</header>
+<div class="mui-content">
+	<div id="slider">
+
+	  <div class="delivery_title">
+        <h4 class="font3">${pointsDate}</h4>
+         <span class="font12">支出：${expendPoints}积分；收入：${incomePoints}积分</span>
+        <span class="right_icon"><a id="pickDateBtn" data-options='{"type":"date"}'><img src="$!{resource}/images/mall/icon_11.png" ></a></span>
+        <input type="hidden" id="date" value="${date}"/>
+		</div>
+	
+				<div >
+					<ul class="mui-table-view">
+							#foreach($wallets in $walletList)
+                            <li class="mui-table-view-cell mui-media">
+                            	#if($!{wallets.funcode}=="MRQD")
+                                    <img class="mui-media-object mui-pull-left" src="$!{resource}/images/mall/icon_14.png">
+                                    <div class="">签到
+                                    #if($!{wallets.pointsio}==0)
+                                    <span class="right_text red_font">
+                                    	+${wallets.points}
+                                    	 </span>
+                                    #elseif($!{wallets.pointsio}==1)
+                                    	<span class="right_text green_font">
+                                     	-${wallets.points}
+                                     	</span>
+                                    #end
+                                        <p class='mui-ellipsis'>${wallets.intimeStr}</p>
+                                    </div>
+                                 #elseif($!{wallets.funcode}=="JFCJ")
+                                 <img class="mui-media-object mui-pull-left" src="$!{resource}/images/mall/icon_13.png">
+                                    <div class="">抽奖
+                                     #if($!{wallets.pointsio}==0)
+                                    <span class="right_text red_font">
+                                    	+${wallets.points}
+                                    	 </span>
+                                    #elseif($!{wallets.pointsio}==1)
+                                    	<span class="right_text green_font">
+                                     	-${wallets.points}
+                                     	</span>
+                                    #end
+                                        <p class='mui-ellipsis'>${wallets.intimeStr}</p>
+                                    </div>
+                                    #elseif($!{wallets.funcode}=="JFCZ")
+                                    <img class="mui-media-object mui-pull-left" src="$!{resource}/images/mall/icon_12.png">
+                                    <div class="">充值
+	                                   #if($!{wallets.pointsio}==0)
+	                                    <span class="right_text red_font">
+	                                    	+${wallets.points}
+	                                    	 </span>
+	                                    #elseif($!{wallets.pointsio}==1)
+	                                    	<span class="right_text green_font">
+	                                     	-${wallets.points}
+	                                     	</span>
+	                                    #end
+                                        <p class='mui-ellipsis'>${wallets.intimeStr}</p>
+                                    </div>
+                                   #else
+	                                   #if($!{wallets.pointsio}==0)
+		                                   <img class="mui-media-object mui-pull-left" src="$!{resource}/images/mall/icon_18.png">
+		                                  #if($!{wallets.funcode}=="ZCZS") 
+		                                    <div class="">注册
+		                                  #else  
+		                                   <div class="">收入
+		                                  #end
+		                                    <span class="right_text red_font">
+		                                    	+${wallets.points}
+		                                    	 </span>
+		                                    	  <p class='mui-ellipsis'>${wallets.intimeStr}</p>
+		                                    </div>
+	                                    #elseif($!{wallets.pointsio}==1)
+	                                      <img class="mui-media-object mui-pull-left" src="$!{resource}/images/mall/icon_17.png">
+	                                    <div class="">支出
+	                                    	<span class="right_text green_font">
+	                                     		-${wallets.points}
+	                                     	</span>
+	                                     	 <p class='mui-ellipsis'>${wallets.intimeStr}</p>
+	                                    </div>
+	                                    #end
+                                       
+                                  #end    
+                            </li>
+                            #end
+                        </ul>
+					</div>
+		</div>
+	</div>
+</div>
+<script src="$!{resource}/js/mui.picker.js"></script>
+<script src="$!{resource}/js/mui.dtpicker.js"></script>
+<script>
+var date = $("#date").val();
+document.querySelector('#pickDateBtn').addEventListener('tap', function() {
+    var dtPicker = new mui.DtPicker({
+    type: "month",//设置日历初始视图模式 
+    beginDate: new Date(2016, 01, 01),//设置开始日期 
+    endDate: new Date(2026, 01, 01),//设置结束日期 
+    labels: ['年', '月'],//设置默认标签区域提示语 
+    value:date
+}); 
+    dtPicker.show(function (selectItems) { 
+    	a = selectItems;
+    	var item_year = selectItems.y.value;
+    	var item_month = selectItems.m.value;
+        var date=item_year + item_month;
+        var gurl = sessionStorage.getItem('jflm.url') || '../detail/'+date+'.htm';
+		sessionStorage.removeItem('jflm.url');
+		location.replace(gurl, true);
+    });
+    
+});
+</script>
+</body>
+</html>

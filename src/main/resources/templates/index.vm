@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+${test.goodsPriceList.paytype}<img src="/images/index.png">
+</body>
+</html>

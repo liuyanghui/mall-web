@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>鸣鹿健康管理产品介绍</title>
+<script>
+// auto adaptation
+(function() {
+	var w = window, d = document, de = d.documentElement, cw = 'clientWidth', ae = 'addEventListener', oc = 'orientationchange', rs = 'resize', dl = 'DOMContentLoaded';
+	var fs = 16, mw = de.getAttribute('data-pagewidth') || 750;
+	var as = function() { if (de[cw]) de.style.fontSize = 100*(de[cw]/mw)*16/fs +'px'; };
+	try { fs = parseInt(w.getComputedStyle(de,null).fontSize || 16, 10); } catch(e) {}
+	w[ae] && w[ae]((oc in w?oc:rs), as, false);
+	d[ae] && d[ae](dl, as, false);
+	as();
+})();
+</script>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<style>
+.tac { text-align:center; }
+.red { color:#fe4365; }
+.mui-slider { height:2.7rem; }
+.mui-slider-indicator { bottom:0; }
+.btn { color:#333; display:block; margin:0 auto; width:1.8rem; height:0.66rem; line-height:0.66rem; border:solid 1px #ccc; border-radius:4px; }
+.btn:after { content:'»'; margin-left:0.1rem; }
+.section { background-color:#fff; padding:0.3rem; font-size:0.28rem; line-height:1.5; color:#666; }
+.section + .section { margin-top:0.2rem; }
+.section dl, .section dt, .section dd { padding:0; margin:0; }
+.section dt { text-align:center; font-size:0.56rem; padding-top:0.5rem; }
+.section dt img { width:2.74rem; height:2.74rem; display:block; margin:0.2rem auto; }
+.section dd p { font-size:0.28rem; margin-bottom:0.2rem; }
+.section dd img { display:block; width:100%; }
+.qrcode { padding:1rem 0 0.2rem; text-align:center; background-color:#fff; }
+.qrcode img { width:2.5rem; margin-bottom:1rem; }
+.qrcode p { font-size:0.24rem; color:#999; }
+.btn-returntop { position:fixed; bottom:0.3rem; right:0.3rem; width:1.06rem; height:1.06rem; }
+.btn-returntop img { display:block; width:100%; }
+.btn-returntop.hidden { display:none; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">鸣鹿健康管理产品介绍</h1>
+</header>
+<div class="mui-content">
+	<div id="slider" class="mui-slider" >
+		<div class="mui-slider-group mui-slider-loop">
+			<div class="mui-slider-item mui-slider-item-duplicate">
+				<img src="../images/minglu/b1.jpg" />
+			</div>
+			<div class="mui-slider-item">
+				<img src="../images/minglu/b1.jpg" />
+			</div>
+			<div class="mui-slider-item">
+				<img src="../images/minglu/b2.jpg" />
+			</div>
+			<div class="mui-slider-item">
+				<img src="../images/minglu/b3.jpg" />
+			</div>
+			<div class="mui-slider-item">
+				<img src="../images/minglu/b4.jpg" />
+			</div>
+			<div class="mui-slider-item mui-slider-item-duplicate">
+				<img src="../images/minglu/b1.jpg" />
+			</div>
+		</div>
+		<div class="mui-slider-indicator">
+			<div class="mui-indicator mui-active"></div>
+			<div class="mui-indicator"></div>
+			<div class="mui-indicator"></div>
+			<div class="mui-indicator"></div>
+		</div>
+	</div>
+	<div class="section">
+		<dl>
+			<dt>
+				<a href="http://cellwellbeing.cn/index"><img src="../images/minglu/icon1.jpg" alt="德国思维必" /></a>
+				德国思维必
+			</dt>
+			<dd class="tac">
+				<p>在我们体内，物质和活细胞均有特 定 的频率或频率范围， Cell Well Being（思维必）可用于 判断它们是 否平衡，受刺激或功能 失调。维生素、矿物质、毒素等都 有特定的 共振频率，这些也都能被 Cell Well Being（思维必）生物 数据分析 仪的高科技装备探测到。</p>
+				<a class="btn" rel="http://cellwellbeing.cn/index">了解更多</a>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<a href="http://wap.cellwellbeing.cn/index.php/Home/Goods/index.html"><img src="../images/minglu/icon2.jpg" alt="加拿大癌症筛查" /></a>
+				加拿大癌症筛查
+			</dt>
+			<dd class="tac">
+				<p>早癌筛查是以毫无症状的健康人群进行的，以发现早期癌症为目的的医学检查。 利用人体的脱落细胞，分析癌前病变细胞核内DNA的异倍体，尽最大可能阻断由于癌前病变导致的癌症发生。</p>
+				<a class="btn" href="http://wap.cellwellbeing.cn/index.php/Home/Goods/index.html">了解更多</a>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<a href="http://wap.cellwellbeing.cn/index.php/Home/Goods/index.html"><img src="../images/minglu/icon3.jpg" alt="可泰基因检测" /></a>
+				可泰基因检测
+			</dt>
+			<dd class="tac">
+				<p>基因体检七种重大疾病：高血压、高血脂、冠心病、脑中风、心肌梗塞、房颤、老年痴呆</p>
+				<a class="btn" href="http://wap.cellwellbeing.cn/index.php/Home/Goods/index.html">了解更多</a>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<a href="http://wap.cellwellbeing.cn/index.php/Home/Goods/index.html"><img src="../images/minglu/icon4.jpg" alt="CTC循环肿瘤细胞检测" /></a>
+				CTC循环肿瘤细胞检测
+			</dt>
+			<dd class="tac">
+				<p>90%的癌症是可以治愈的，但多数人错过最佳治疗期，目前，对于小于2mm肿瘤细胞任何常规手段检测不出来，只有CTC检测技术可以提早6个月分离出肿瘤细胞并分型分析确定。</p>
+				<a class="btn" href="http://wap.cellwellbeing.cn/index.php/Home/Goods/index.html">了解更多</a>
+			</dd>
+		</dl>
+	</div>
+	<div class="section">
+		<dl id="s1">
+			<dt>德国思维必</dt>
+			<dd>
+				<p>思维必”是一个“监测人体营养素和毒素状况，并给出具体健康指导的健康评估系统”，能监测9大类，300多项健康指标，80%为目前医疗机构的检测空白......包括矿物质16项，抵抗力6项，氨基酸23项，必需脂肪酸3项，食物249项，抗氧化剂13项，环境挑战3项，电磁场/极低频率，各种维生素。</p>
+				<p>具体应用在指导减肥瘦身、指导健身美容、指导优育、指导优生、制定个人健康宝典、消除防癌隐患等各种方面。</p>
+				<p><img src="../images/minglu/s1.jpg" alt="德国思维必" /></p>
+			</dd>
+		</dl>
+		<dl id="s2">
+			<dt>加拿大癌筛</dt>
+			<dd>
+				<p>据世界卫生组织的数据表明，中国癌症的发病率位居<span class="red">世界第一</span></p>
+				<p>中国每年约有<span class="red">281万人</span>死于癌症</p>
+				<p>每年新发癌症病例<span class="red">429万人</span></p>
+				<p>每一分钟就有<span class="red">8人</span>确诊为癌症，未来20年，中国的癌症发病率与死亡率仍将急速攀升</p>
+				<p>据研究，癌症在早期阶段得到治疗，治愈率大于<span class="red">90%</span>，而晚期发现的治愈率小于<span class="red">10%</span></p>
+				<p>所以，早期的癌症筛查<span class="red">非常必要</span></p>
+				<img src="../images/minglu/s2.jpg" alt="加拿大癌筛" />
+			</dd>
+		</dl>
+		<dl id="s3">
+			<dt>可泰基因检测</dt>
+			<dd>
+				<p class="red">可泰，一生一次的，一次一生的基因体检你做了吗？</p>
+				<p>基因体检七种重大疾病：高血压、高血脂、冠心病、脑中风、心肌梗塞、房颤、老年痴呆</p>
+				<p>
+					可泰基因体检简单方便： <br/>
+					1：不用去医院，在家可以自我采样 <br/>
+					2：用本产品的专业采样棒在口腔左右内表面各刷10下即可，交给专业物流送达国家级基因检测实验室 <br/>
+					3：检验分析出具报告书
+				</p>
+				<p>
+					基因检测可以准确的给你预警信号，基因体检可以测定未来是否患有重大疾病，基因检测的目的是提早干预采取预防措施
+				</p>
+				<img src="../images/minglu/s3.jpg" alt="可泰基因检测" />
+			</dd>
+		</dl>
+		<dl id="s4">
+			<dt>CTC循环肿瘤细胞检测</dt>
+			<dd>
+				<p>90%的癌症是可以治愈的，但多数人错过最佳治疗期，目前，对于小于2mm肿瘤细胞任何常规手段检测不出来，只有CTC检测技术可以提早6个月分离出肿瘤细胞并分型分析确定。</p>
+				<p>癌症复发转移检测，癌症疗效评估检测，癌症靶向药物检测。</p>
+				<p>
+					<span class="red">哪些人需要做CTC检测？ </span><br />
+					癌症患者：已经确诊为癌症的患者，最迫切想要知道的就是本次治疗疗效如何？治疗后癌症有没有再次复发转移？通过CTC检测对循环肿瘤细胞的分离分型分析，就能进行预后疗效评估、复发转移实时监测等，通过对CTC单细胞组的分析，可以精准治疗选择靶向药物治疗方案，实现真正的液体活检。
+				</p>
+				<img src="../images/minglu/s4.jpg" alt="CTC循环肿瘤细胞检测" />
+			</dd>
+		</dl>
+	</div>
+	<div class="qrcode">
+		<img src="../images/minglu/wx2.jpg" alt="关注微信公众号" />
+		<p>北京鸣鹿健康管理有限公司 版权所有</p>
+	</div>
+	<div class="btn-returntop hidden"><img src="../images/minglu/returntop.png" alt="回到顶部" /></div>
+</div>
+<script>
+(function() {
+	mui('.btn-returntop').tap(function() {
+		window.scrollTo(0, 0);
+	});
+	window.addEventListener('scroll', function() {
+		if (window.pageYOffset > window.innerHeight) {
+			mui('.btn-returntop').removeClass('hidden');
+		} else {
+			mui('.btn-returntop').addClass('hidden');
+		}
+	});
+})();
+</script>
+</body>
+</html>

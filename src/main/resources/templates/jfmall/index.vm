@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>积分联盟</title>
+<script>
+// auto adaptation
+(function() {
+	var w = window, d = document, de = d.documentElement, cw = 'clientWidth', ae = 'addEventListener', oc = 'orientationchange', rs = 'resize', dl = 'DOMContentLoaded';
+	var fs = 16, mw = de.getAttribute('data-pagewidth') || 750;
+	var as = function() { if (de[cw]) de.style.fontSize = 100*(de[cw]/mw)*16/fs +'px'; };
+	try { fs = parseInt(w.getComputedStyle(de,null).fontSize || 16, 10); } catch(e) {}
+	w[ae] && w[ae]((oc in w?oc:rs), as, false);
+	d[ae] && d[ae](dl, as, false);
+	as();
+})();
+</script>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<link href="$!{resource}/css/icons-extra.css" rel="stylesheet" />
+<style>
+/* 自定义标题栏 */
+.mui-inner-wrap .mui-bar-nav { display:block; background:url($!{resource}/images/mall/navbg.png) no-repeat center center; height:1.54rem; background-size:100% 100%; }
+.mui-inner-wrap .mui-bar .mui-title { color:#fff; line-height:1rem; font-size:0.32rem; }
+.mui-inner-wrap .mui-bar .mui-icon { width:0.88rem; height:1rem; background-repeat:no-repeat; background-position:center center; background-size:0.36rem 0.38rem; }
+.mui-inner-wrap .mui-bar .mui-icon:active { opacity:1 }
+.mui-inner-wrap .mui-bar .mui-icon-account { background-image:url($!{resource}/images/icon/account.png); }
+.mui-inner-wrap .mui-bar .mui-icon-order { background-image:url($!{resource}/images/icon/order.png); }
+.mui-inner-wrap .mui-bar .mui-icon-cart { background-image:url($!{resource}/images/icon/cart.png); }
+.mui-bar-nav~.mui-content { padding-top:0; }
+.webview-wx .mui-inner-wrap .mui-bar .mui-title { display:none; }
+/* 左侧菜单 */
+.mui-off-canvas-wrap.mui-active .mui-off-canvas-backdrop { box-shadow:0 0 4px 0 rgba(0,0,0,.5); }
+.mui-off-canvas-wrap:not(.mui-slide-in).mui-scalable { background-color:#f1f1f1; }
+.mui-off-canvas-left { width:5rem !important; background-color:#f1f1f1; }
+.mui-off-canvas-left .account-view { padding:0.6rem 0 0.6rem 0.8rem; overflow:hidden; color:#666; }
+.mui-off-canvas-left .account-view img { float:left; width:1.4rem; height:1.4rem; margin-right:0.2rem; border-radius:0.7rem; }
+.mui-off-canvas-left .account-view p { padding-top:0.3rem; line-height:1.5; font-size:0.28rem; }
+.mui-off-canvas-left .mui-table-view { background:none; margin-left:1rem; width:2.5rem; color:#666; font-size:0.32rem; }
+.mui-off-canvas-left .mui-table-view:before,
+.mui-off-canvas-left .mui-table-view:after,
+.mui-off-canvas-left .mui-table-view-cell:after { display:none; }
+/* welcome */
+.mui-welcome { position:fixed; top:0; left:0; bottom:0; right:0; z-index:1000; }
+.mui-welcome { background-color:rgba(0,0,0,0.75); -webkit-transition:all 0.8s ease; transition:all 0.8s ease; }
+.mui-welcome.quit { -webkit-transform:translateY(-150%); transform:translateY(-150%); }
+.mui-welcome h3 { text-align:center; color:#fff; position:absolute; line-height:30px; left:0; right:0; top:50%; margin-top:-30px; font-size:16px; }
+/* demos */
+.section { overflow:hidden; margin-top:0.2rem; }
+.section img { display:block; width:100%; }
+.section h3 { margin:0; }
+.section p, .section ul { margin:0.2rem 0 0 0; }
+.section h3 + p, .section h3 + ul { margin-top:0; }
+.section.col2 a img { float:left; width:50%; }
+.section.col3 { padding-bottom:0.2rem; }
+.section ul { overflow:hidden; border-top:solid 1px #e7e7e7; padding:0; background-color:#fff; width:7.5rem; }
+.section li { float:left; width:2.48rem; padding:0.16rem 0; border-bottom:solid 1px #e7e7e7; position:relative; list-style:none; text-align:center; }
+.section li:after { position:absolute; content:''; background-color:#e7e7e7; top:0.16rem; bottom:0.16rem; left:-1px; width:1px; }
+.section li a { display:block; }
+.section li strong { font-size:0.22rem; color:#333; display:block; padding:0 0.2rem; }
+.section li span { display:block; font-size:0.18rem; color:#f00; }
+.section li img { width:1.6rem; height:.1.6rem; margin:0 auto; float:none; }
+/* slide */
+.mui-slider { height:4.2rem; }
+</style>
+</head>
+<body>
+<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable mui-scalable">
+	<aside id="offCanvasSide" class="mui-off-canvas-left">
+		<div id="offCanvasSideScroll" class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="account-view">
+					#if($!{islogin}=='1')
+					<img src="$!{resource}/images/defbuddy.jpg" />
+					<p>
+						<span style="color:#333">#if($!{hidemobileid}!='') $!{hidemobileid} #else 你好！#end</span><br />
+						<a href="../login/loginOut.htm">退出登录</a>
+					</p>
+					#else
+					<img src="$!{resource}/images/defbuddy.jpg" />
+					<p>
+						你好！<br />
+						<a href="../login/index.htm">请先登录</a>
+					</p>
+					#end
+				</div>
+				<ul class="mui-table-view">
+					
+					<li class="mui-table-view-cell">
+						<a href="../wallet/index.htm" class="mui-navigate-right">积分钱包</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="../member/index.htm" class="mui-navigate-right">个人中心</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="../news/message.htm" class="mui-navigate-right">消息中心</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="contactkf" href="tel:13482854553" class="mui-navigate-right">联系客服</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="../about/us.htm" class="mui-navigate-right">关于我们</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</aside>
+	<!--主界面部分-->
+	<div class="mui-inner-wrap">
+		<header class="mui-bar mui-bar-nav">
+			<a href="#offCanvasSide" class="mui-action-menu mui-icon mui-icon-account mui-pull-left"></a>
+			<h1 class="mui-title">积分联盟</h1>
+			
+			<a href="../order/order.htm" class="mui-icon mui-icon-order mui-pull-right"></a>
+		</header>
+		<div id="offCanvasContentScroll" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div id="slider" class="mui-slider" >
+					<div class="mui-slider-group mui-slider-loop">
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<img src="$!{resource}/images/mall/banner1.png" />
+						</div>
+						
+						<div class="mui-slider-item">
+							<img src="$!{resource}/images/mall/banner1.png">
+						</div>
+						<div class="mui-slider-item">
+							<img src="$!{resource}/images/mall/banner2.png">
+						</div>
+						<div class="mui-slider-item">
+							<a href="http://wap.cellwellbeing.cn/index.php/Dete/Index"><img src="$!{resource}/images/mall/banner3.png" alt="健康密码" /></a>
+						</div>
+						
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<img src="$!{resource}/images/mall/banner1.png" />
+						</div>
+						
+					</div>
+					<div class="mui-slider-indicator">
+						<div class="mui-indicator mui-active"></div>
+						<div class="mui-indicator"></div>
+						<div class="mui-indicator"></div>
+					</div>
+				</div>
+				<div class="section col2">
+					<a href="../activity/signin.htm"><img src="$!{resource}/images/mall/1_1.png" class="half" /></a>
+					<a href="../lottery/game.htm"><img src="$!{resource}/images/mall/1_2.png" class="half" /></a>
+				</div>
+				<div class="section col2">
+					<h3><img src="$!{resource}/images/mall/21.png" /></h3>
+					<a href="goods/$!{adpicGoodsIds.get(0)}.htm"><img src="$!{staticDomain}/uploadimage/ad_$!{adpicGoodsIds.get(0)}.jpg" /></a>
+					<a href="goods/$!{adpicGoodsIds.get(1)}.htm"><img src="$!{staticDomain}/uploadimage/ad_$!{adpicGoodsIds.get(1)}.jpg" /></a>
+					<a href="goods/$!{adpicGoodsIds.get(2)}.htm"><img src="$!{staticDomain}/uploadimage/ad_$!{adpicGoodsIds.get(2)}.jpg" /></a>
+				</div>
+				<div class="section col3">
+					<h3><img src="$!{resource}/images/mall/31.png" /></h3>
+					
+					<ul>
+					#foreach($goods in $!{goodsList})
+					 #if($!velocityCount<7)
+						<li>
+							<a href="goods/$!{goods.productid}.htm">
+								<strong class="mui-ellipsis">$!{goods.goodsname}</strong>
+								<span>#if($!{goods.paytype}=="points")
+									$!{goods.pointsstr}积分
+								#elseif($!{goods.paytype}=="cash")
+									$!{goods.price}元
+								#elseif($!{goods.paytype}=="comb")
+									$!{goods.pointsstr}积分+$!{goods.price}元
+								#else
+									价格待定
+								#end
+								</span>
+								<img src="$!{staticDomain}/$!{goods.centerpic}" alt="$!{goods.goodsname}" />
+							</a>
+						</li>
+						#end
+					#end
+					</ul>
+					<p>
+						<a href="goods/$!{adpicGoodsIds.get(3)}.htm"><img src="$!{staticDomain}/uploadimage/ad_$!{adpicGoodsIds.get(3)}.jpg" /></a>
+					<p>
+					<ul>
+					#foreach($goods in $!{goodsList})
+					 #if($!velocityCount>7 && $!velocityCount<13)
+						<li>
+							<a href="goods/$!{goods.productid}.htm">
+								<strong class="mui-ellipsis">$!{goods.goodsname}</strong>
+								<span>#if($!{goods.paytype}=="points")
+									$!{goods.pointsstr}积分
+								#elseif($!{goods.paytype}=="cash")
+									$!{goods.price}元
+								#elseif($!{goods.paytype}=="comb")
+									$!{goods.pointsstr}积分+$!{goods.price}元
+								#else
+									价格待定
+								#end
+								</span>
+								<img src="$!{staticDomain}/$!{goods.centerpic}" alt="$!{goods.goodsname}" />
+							</a>
+						</li>
+						#end
+					#end
+					</ul>
+					<p>
+						<a href="goods/$!{adpicGoodsIds.get(4)}.htm"><img src="$!{staticDomain}/uploadimage/ad_$!{adpicGoodsIds.get(4)}.jpg" /></a>
+					<p>
+					<ul>
+					#foreach($goods in $!{goodsList})
+					 #if($!velocityCount>12 && $!velocityCount<19)
+						<li>
+							<a href="goods/$!{goods.productid}.htm">
+								<strong class="mui-ellipsis">$!{goods.goodsname}</strong>
+								<span>#if($!{goods.paytype}=="points")
+									$!{goods.pointsstr}积分
+								#elseif($!{goods.paytype}=="cash")
+									$!{goods.price}元
+								#elseif($!{goods.paytype}=="comb")
+									$!{goods.pointsstr}积分+$!{goods.price}元
+								#else
+									价格待定
+								#end
+								</span>
+								<img src="$!{staticDomain}/$!{goods.centerpic}" alt="$!{goods.goodsname}" />
+							</a>
+						</li>
+						#end
+					#end
+					</ul>
+					
+				</div>
+			</div>
+		</div>
+		<div class="mui-off-canvas-backdrop"></div>
+	</div>
+</div>
+<script>
+// 页面链接点击
+mui('.mui-bar-nav, .mui-off-canvas-left, .section').tap(function(e) {
+	if (e.target) {
+		var tag = e.target.tagName.toLowerCase();
+		if (tag =='a') {
+			location.href = e.target.href;
+		} else if (e.target.parentNode && e.target.parentNode.tagName.toLowerCase()=='a') {
+			location.href = e.target.parentNode.href;
+		}
+	}
+	return false;
+});
+mui('#contactkf').tap(function(e) {
+	var href = e.target.href;
+	mui.confirm(href.split(':')[1], '客服热线', ['取消', '拨打'], function(e) {
+		if (e.index == 1) {
+			location.href = href.replace('-','');
+		}
+	});
+});
+//
+mui('.mui-slider').slider({interval:1000 });
+mui('#offCanvasSideScroll').scroll();
+mui('#offCanvasContentScroll').scroll();
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

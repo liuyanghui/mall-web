@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>积分抽奖</title>
+<link href="$!{resource}/css/game.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/lottery/scrollText.js"></script>
+<style>
+.lottery1 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery2 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery3 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery0 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery5 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery4 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery6 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+.lottery7 { display:none; position:fixed; left:0; right:0; bottom:0; top:0px; overflow:auto; background-color:rgba(0,0,0,0.75); color:#fff; padding:0.3rem; z-index:999; }
+
+.prize{ float:right; text-align:right;}
+</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body >
+  <div class="game_title"><img src="$!{resource}/images/game/title.png"></div>
+  <div class="game_box">
+    <div class="game_jf">可用积分:<span id="score">${points}</span>
+   		 <input type="hidden" id="lotterypoints" value="${lotterypoints}">
+   		 <input type="hidden" id="lotterycount" value="${lotterycount}">
+    </div>
+    <div class="jf_line"></div>
+  </div>
+  <div class="game_gz">活动规则</div>
+    <div class="game_main">
+  <div id="lottery">  
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="lottery-unit lottery-unit-0"> <img src="$!{resource}/images/game/game_1.png"><div class="mask"></div></td>
+            <td class="lottery-unit lottery-unit-1"><img src="$!{resource}/images/game/game_2.png" > <div class="mask"></div></td>
+            <td class="lottery-unit lottery-unit-2"><img src="$!{resource}/images/game/game_3.png" > <div class="mask"></div></td>
+        </tr>
+        <tr>
+            <td class="lottery-unit lottery-unit-7"><img src="$!{resource}/images/game/game_8.png" ><div class="mask"></div></td>
+            <td><a href="#"><img src="$!{resource}/images/game/go.png" > </a></td>
+            <td class="lottery-unit lottery-unit-3"><img src="$!{resource}/images/game/game_4.png" > <div class="mask"></div></td>
+        </tr>
+        <tr>
+            <td class="lottery-unit lottery-unit-6"><img src="$!{resource}/images/game/game_7.png" > <div class="mask"></div></td>
+            <td class="lottery-unit lottery-unit-5"><img src="$!{resource}/images/game/game_6.png" > <div class="mask"></div></td>
+            <td class="lottery-unit lottery-unit-4"><img src="$!{resource}/images/game/game_5.png" > <div class="mask"></div></td>
+        </tr>
+    </table>
+</div>
+</div>
+<div class="game_record">
+	<a href="/lottery/lotteryinfo.htm">查看我的中奖记录</a>
+</div>
+<div class="list_box">
+	<div class="list_top"><img src="$!{resource}/images/game/pic.png"></div>
+ 	<div class="game_line"></div>
+ 	<div class="game_row">
+   		<div class="list_name">中奖名单</div>
+   		 <div id="border_body">
+   		 <ul class="game_list">
+   			#foreach($lottery in $lotteryList)
+     			<li>${lottery.mobileid} <span class="prize">获得${lottery.goodsname}</span></li>
+			#end   
+   		</ul>
+   		</div>
+ 		<div class="game_btm"></div>
+ 	</div>
+</div>
+<div class="rule" id="rulee" >
+	<div class="list_box_02" style="margin-top: 40px">	
+	 <div class="game_line"></div>
+	 <div class="game_row">
+	   <div class="list_name">50积分，幸运大抽奖</div>
+	   <ul class="game_list">
+	     <li>1、每次抽奖需消耗50积分，每人每天最多可抽3次</li>
+	     <li>2、参加抽奖即有机会获得专属优惠券或红包</li>
+	 </ul>
+	 <div class="rule_box">
+	  <ul>
+	    <li>一等奖：33元哈根达斯电子券</li>
+	    <li>二等奖：500积分</li> 
+	    <li>三等奖：300积分</li>
+	    <li>四等奖：100积分</li>
+	    <li style="color:#ca0d87;">谢谢参与</li>	  
+	  </ul> 
+	 </div>
+	 <div class="annotation">
+	     <p>注：本次活动有效期为2017.4.20--2017.5.29</p>
+	     <p style=" color:#600085">积分联盟保留此次活动的最终解释权</p>
+	 </div>
+	 <div class="game_btm"></div>
+	 </div>
+	</div>
+</div>
+<div class="lottery5">
+	<div class="reward_content">
+	    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+	   <div class="reward_pic"> <img src="$!{resource}/images/game/prize_02.png"></div>
+	   <div class="reward_font">
+	     <p>感谢支持，么么哒～</p>
+	   </div>
+	   <div class="btn_purple">再玩一次</div>
+	</div>
+</div>
+<div class="lottery2">
+	 <div class="reward_content">
+	    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+	   <div class="reward_gold"> <img src="$!{resource}/images/game/prize_03.png"></div>
+	   <div class="reward_font">
+	          <p> 恭喜您，获得<span class="red_font">100积分</span></p>
+	   </div>
+	   <div class="btn_purple">再玩一次</div>
+	</div>
+</div>
+<div class="lottery3">
+	  <div class="reward_content">
+    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+   <div class="reward_gold"> <img src="$!{resource}/images/game/prize_04.png"></div>
+   <div class="reward_font">
+          <p> 恭喜您，获得<span class="red_font">300积分</span></p>
+   </div>
+   <div class="btn_purple">再玩一次</div>
+</div>
+</div>
+<div class="lottery0">
+	  <div class="reward_content">
+    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+   <div class="reward_gold"> <img src="$!{resource}/images/game/prize_05.png"></div>
+   <div class="reward_font">
+          <p> 恭喜您，获得<span class="red_font">500积分</span></p>
+   </div>
+   <div class="btn_purple">再玩一次</div>
+</div>
+</div>
+<div class="lottery4">
+	<div class="reward_content">
+	    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+	   <div class="reward_pic"> <img src="$!{resource}/images/game/prize_02.png"></div>
+	   <div class="reward_font">
+	     <p>积分不够啦，快去赚积分~</p>
+	   </div>
+	   <div class="btn_purple"><a href="$!{resource}/activity/signin.htm">赚积分</a></div>
+	</div>
+</div>
+<div class="lottery6">
+	<div class="reward_content">
+	    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+	   <div class="reward_pic"> <img src="$!{resource}/images/game/prize_02.png"></div>
+	   <div class="reward_font">
+	     <p>领取成功^_^</p>
+	   </div>
+	   <div class="btn_purple">再玩一次</div>
+	</div>
+</div>
+<div class="lottery7">
+	<div class="reward_content">
+	    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+	   <div class="reward_pic"> <img src="$!{resource}/images/game/prize_02.png"></div>
+	   <div class="reward_font">
+	     <p>今天的机会已经用完了，请明天再来哦！^_^</p>
+	   </div>
+	</div>
+</div>
+<div class="lottery1">
+<div class="reward_content">
+    <div class="close_icon"><img src="$!{resource}/images/game/close.png" ></div>
+   <div class="reward_img"> <img src="$!{resource}/images/game/prize_01.png"></div>
+   <div class="reward_font">
+     <p> 恭喜您，获得<span class="red_font">33元哈根达斯电子券</span></p>
+   </div>
+   <input type="hidden" id="trace" >
+   <div class="btn_purple"><a id="receive">立即领取</a></div>
+</div>
+</div>
+</div>
+<script src="$!{resource}/js/jquery-latest.js"></script>
+<script>
+var lottery={
+    index:-1,    //当前转动到哪个位置，起点位置
+    count:0,    //总共有多少个位置
+    timer:0,    //setTimeout的ID，用clearTimeout清除
+    speed:20,    //初始转动速度
+    times:0,    //转动次数
+    cycle:40,    //转动基本次数：即至少需要转动多少次再进入抽奖环节
+    prize:-1,    //中奖位置
+    init:function(id){
+        if ($("#"+id).find(".lottery-unit").length>0) {
+            $lottery = $("#"+id);
+            $units = $lottery.find(".lottery-unit");
+            this.obj = $lottery;
+            this.count = $units.length;
+        };
+    },
+    roll:function(){
+        var index = this.index;
+        var count = this.count;
+        var lottery = this.obj;
+        $(lottery).find(".lottery-unit-"+index).removeClass("active");
+        index += 1;
+        if (index>count-1) {
+            index = 0;
+        };
+        $(lottery).find(".lottery-unit-"+index).addClass("active");
+        this.index=index;
+        return false;
+    },
+    stop:function(index){
+        this.prize=index;
+        return false;
+    }
+};
+
+function roll(){
+    lottery.times += 1;
+    lottery.roll();//转动过程调用的是lottery的roll方法，这里是第一次调用初始化
+    if (lottery.times > lottery.cycle+10 && lottery.prize==lottery.index) {
+        clearTimeout(lottery.timer);
+        lottery.prize=-1;
+        lottery.times=0;
+        click=false;
+        if(lottery.index==3||lottery.index==6){
+        	lottery.index=3;
+        }else if(lottery.index==2||lottery.index==4||lottery.index==7){
+        	lottery.index=2;
+        }
+        if (lottery.afterCallback) {
+        	lottery.afterCallback();
+        	lottery.afterCallback = null;
+        }
+        if (lottery.message) {
+        	showResult(lottery.message);
+        } else {
+        	$('.lottery'+lottery.index).show();
+        }
+    }else{
+        if (lottery.times<lottery.cycle) {
+            lottery.speed -= 10;
+        }else if(lottery.times==lottery.cycle) {
+          mui.ajax('/lottery/clicklottery.htm',{
+				data:{},
+				timeout : ${timeout}, //超时时间设置，单位毫秒
+				dataType:'json', //服务器返回json格式数据
+				type:'get', //HTTP请求类型
+				success:function(data){
+					var ret = data.ret;
+					var msg = data.msg;
+					if (ret=="success"){
+						lottery.prize = msg.goodsid;
+						lottery.message = '';
+						lottery.afterCallback = function() {
+							$("#score").text(msg.points);
+							$("#trace").val(msg.trace);
+							$("#lotterycount").val(msg.lotterycount);
+						};
+					}else {
+						lottery.prize = 5;
+						lottery.message = msg;
+					}
+				},
+				error:function(xhr,type,errorThrown){
+						//异常处理；
+						lottery.prize = 5;
+						lottery.message = '';
+					}
+			});
+                
+        }else{
+            if (lottery.times > lottery.cycle+10 && ((lottery.prize==0 && lottery.index==7) || lottery.prize==lottery.index+1)) {
+                lottery.speed += 110;
+            }else{
+                lottery.speed += 20;
+            }
+        }
+        if (lottery.speed<40) {
+            lottery.speed=40;
+        };
+        //console.log(lottery.times+'^^^^^^'+lottery.speed+'^^^^^^^'+lottery.prize);
+        lottery.timer = setTimeout(roll,lottery.speed);//循环调用
+    }
+    return false;
+}
+
+var click=false;
+var showResult = function(msg) {
+	$('.lottery7 p').html(msg || '今天的机会已经用完了，请明天再来哦！^_^');
+	$('.lottery7').show();
+};
+window.onload=function(){
+   lottery.init('lottery');
+   $('.reward_content .close_icon').click(function() {
+   	$(this).parent().parent().hide();
+   });
+   $('.reward_content .btn_purple').click(function() {
+   	if ($(this).find('a').length == 0) {
+   		$(this).parent().parent().hide();
+   	}
+   });
+   var points = $("#lotterypoints").val();   
+   $("#lottery a").click(function(){
+   var counts=$("#lotterycount").val();
+     var score=$("#score").html(); 
+     	if(counts>=3){
+     		showResult();
+     		return false;
+     	}
+	    if(score<50){
+	    	$('.lottery4').show();
+	    	return false;
+	    }
+        if (click) {//click控制一次抽奖过程中不能重复点击抽奖按钮，后面的点击不响应
+            return false;
+        }else{
+        	$("#score").text(score-points);
+            lottery.speed=100;
+            roll();    //转圈过程不响应click事件，会将click置为false
+            click=true; //一次抽奖完成后，设置click为true，可继续抽奖
+            return false;
+        }
+    });
+};
+//立即领取电子劵
+document.querySelector('#receive').addEventListener('tap', function() {
+	var $trace = $("#trace").val();
+	mui.ajax('/lottery/receive.htm',{
+				data:{trace:$trace},
+				dataType:'json', //服务器返回json格式数据
+				type:'get', //HTTP请求类型
+				success:function(data){
+					var ret = data.ret;
+					var msg = data.msg;
+					if (ret=="success"){
+						$('.lottery6').show();
+					}else {
+						showResult(msg);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+						//异常处理；
+					}
+			});
+});
+//滚动
+var scrollup = new ScrollText("border_body"); 
+scrollup.Start();
+</script>
+<!--效果html结束-->
+
+</body>
+<script>
+//活动规则showRule
+mui('.game_gz').tap(function() {
+	$("#rulee").show();
+	$('html').css({"height":"100%","overflow":"hidden"});
+	$('body').css({"height":"100%","overflow":"hidden"});
+	
+});
+mui('.rule').tap(function() {
+	$("#rulee").hide();
+	 $('html').css({"overflow":"auto"});
+	 $('body').css({"overflow":"auto"});
+});
+</script>
+</html>

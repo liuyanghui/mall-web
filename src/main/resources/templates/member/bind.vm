@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>绑定手机号</title>
+<link href="/css/mui.min.css" rel="stylesheet"/>
+<script src="/js/jsencrypt.js"></script>
+<script  type="text/javascript" src="/js/security.js"></script> 
+<script src="/js/mui.min.js"></script>
+<script src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">	
+	$(function(){
+		//手机号格式验证
+		$("#mobileid").blur(function(){
+			var mobileid = document.getElementById("mobileid").value;
+			var ret = /^1(3|4|5|7|8)\d{9}$/;
+			if(ret.test(mobileid)){
+			}else{
+				mui.toast('请输入11位正确的手机号',{ duration:'1', type:'div' });
+			}
+		});
+		//发送验证码
+		$("#sendcode").click(function(){
+			var mobileid = document.getElementById("mobileid").value;
+			
+			var ret =/^1(3|4|5|7|8)\d{9}$/;
+			if(ret.test(mobileid)){
+			}else{
+				mui.toast('请输入11位正确的手机号',{ duration:'1', type:'div' });
+				return;
+			}
+			$.post("/member/sendcode.do",{"mobileid":mobileid}
+				,function(result){
+				var ret = result.ret;
+				if(ret == "success"){
+					var count = 60;
+					var countdown = setInterval(CountDown, 1000);
+					function CountDown() {
+						$("#sendcode").attr("disabled", true);
+						$("#sendcode").text(count+"秒后重新发送");
+						if (count == 0) {
+							$("#sendcode").removeAttr("disabled");
+							$("#sendcode").text("发送验证码");
+							clearInterval(countdown);
+						}
+						count--;
+					}
+					$("#bind").show();
+					$("#sure").hide();
+					mui.toast(result.msg,{ duration:'1', type:'div' });
+				}else if(ret == "membersuccess"){
+					$("#pass").hide();
+					$("#bind").hide();
+					$("#sure").show();
+					mui.toast('该手机号已注册，请输入验证码进行绑定!',{ duration:'1', type:'div' });
+				}else{
+					mui.toast(result.msg,{ duration:'1', type:'div' });
+				}	
+			});
+		});
+		
+		//注册
+		$("#bind").click(function(){
+			var mobileid = document.getElementById("mobileid").value;
+			var code = document.getElementById("code").value;
+			var pwd_one = document.getElementById("pwd_one").value;
+			var pwd_two = document.getElementById("pwd_two").value;
+			//手机号格式验证
+			var mobile_ret =/^1(3|4|5|7|8)\d{9}$/;
+			if(mobile_ret.test(mobileid)){
+			}else{
+				mui.toast('请输入11位正确的手机号',{ duration:'1', type:'div' });
+			  	return;
+			}
+			//验证码验证
+			var code_ret = /^\d{4}$/;
+		 	if(code_ret.test(code)){
+		 	}else{
+		 		mui.toast('请输入4位数字验证码',{ duration:'1', type:'div' });
+		 		return;
+		 	}
+			//密码验证
+			//验证-1:必须为8~20位字母与数字组合
+			var pwd_count_ret = /^[a-zA-Z0-9]{8,20}$/;
+			//验证-2:密码必须是8~20位数字与字母组合
+			var pwd_ret = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/;
+			if(pwd_count_ret.test(pwd_one) && pwd_count_ret.test(pwd_two)){
+			}else{
+				mui.toast('密码必须为8-20位字母与数字组合!',{ duration:'1', type:'div' });
+				return;
+			}
+			if(pwd_ret.test(pwd_one) && pwd_ret.test(pwd_two)){
+			}else{
+				mui.toast('密码必须为8-20位字母与数字组合!',{ duration:'1', type:'div' });
+				return;
+			}
+			//两次密码一致验证
+			if(pwd_one != pwd_two){
+				mui.toast('两次输入密码不一致,请重新输入!',{ duration:'1', type:'div' });
+				return;
+			}
+			//密码加密
+			var exponent = $("#exponent").val();
+			var modulus = $("#module").val();
+			var publicKey = RSAUtils.getKeyPair(exponent, '', modulus);
+			var pwd = RSAUtils.encryptedString(publicKey, pwd_one);
+			//提交注册信息,绑定手机成功后跳转到积分页面
+			$.post("/member/addmobile.htm",{"mobileid":mobileid,"password":pwd,"code":code}
+			,function(result){
+				var ret = result.ret;
+				if(ret == "success"){
+					mui.toast('绑定手机成功',{ duration:'1000', type:'div' });
+					var temp = document.createElement("form");    
+				    temp.action = result.msg;        
+				    temp.method = "get";        
+				    temp.style.display = "none";        
+				    document.body.appendChild(temp);        
+				    temp.submit();  
+				}else{
+					mui.toast(result.msg,{ duration:'1', type:'div' });
+				}
+			});
+		});
+
+	//确定
+	$("#sure").click(function(){
+			var mobileid = document.getElementById("mobileid").value;
+			var code = document.getElementById("code").value;
+			//手机号格式验证
+			var mobile_ret =/^1(3|4|5|7|8)\d{9}$/;
+			if(mobile_ret.test(mobileid)){
+			}else{
+				mui.toast('请输入11位正确的手机号',{ duration:'1', type:'div' });
+			  	return;
+			}
+			//验证码验证
+			var code_ret = /^\d{4}$/;
+		 	if(code_ret.test(code)){
+		 	}else{
+		 		mui.toast('请输入4位数字验证码',{ duration:'1', type:'div' });
+		 		return;
+		 	}
+			//提交注册信息,绑定手机成功后跳转到积分页面
+			$.post("/member/showDetail.htm",{"mobileid":mobileid,"code":code}
+			,function(result){
+				var ret = result.ret;
+				if(ret == "success"){
+					mui.toast('绑定手机成功',{ duration:'1000', type:'div' });
+					var temp = document.createElement("form");    
+				    temp.action = result.msg;        
+				    temp.method = "get";        
+				    temp.style.display = "none";        
+				    document.body.appendChild(temp);        
+				    temp.submit();  
+				}else{
+					mui.toast(result.msg,{ duration:'1', type:'div' });
+				}
+			});
+		});
+	});
+</script>
+<style>
+.mui-input-group { margin-top:10px;	}
+.mui-input-group:first-child { margin-top:20px; }
+.mui-input-group label { width:25%; }
+.mui-input-row label~input,
+.mui-input-row label~select,
+.mui-input-row label~textarea { width:75%; }
+.mui-checkbox input[type=checkbox],
+.mui-radio input[type=radio] { top:6px; }
+.mui-content-padded { margin-top:25px; }
+.mui-btn { padding:10px; }
+</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">绑定手机号</h1>
+</header>
+<div class="mui-content">
+	<input type="hidden" id="module" hidden="true"
+	style="display: none;" value=$!{module} name="module">
+	<input type="hidden" id="exponent" hidden="true"
+	style="display: none;" value=$!{expoent} name="exponent">
+	<div class="mui-input-group">
+		<div class="mui-input-row">
+			<label>手机</label>
+			<input id="mobileid" type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号码" />
+		</div>
+		<div class="mui-input-row">
+			<label>验证码</label>
+			<input id="code" type="text" class="mui-input-clear mui-input" placeholder="请输入短信验证码" />
+			<button id = "sendcode" class="mui-btn" style="position:absolute;right:10px;top:6px;width:auto;padding:5px 10px;">发送验证码</button>
+		</div>
+		<div id="pass">
+		<div class="mui-input-row">
+			<label>密码</label>
+			<input id="pwd_one" type="password" class="mui-input-password" placeholder="8-20位字母和数字组合" />
+			<span></span>
+		</div>
+		<div class="mui-input-row">
+			<label>确认</label>
+			<input id="pwd_two" type="password" class="mui-input-password" placeholder="请确认登录密码" />
+		</div>
+		</div>
+	</div>
+	
+	<div class="mui-content-padded">
+		<button id="bind" class="mui-btn mui-btn-block mui-btn-primary">立即绑定</button>
+		<button id="sure" class="mui-btn mui-btn-block mui-btn-primary" style="display: none" >确定</button>
+	</div>
+</div>
+
+</body>
+</html>

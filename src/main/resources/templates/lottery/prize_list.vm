@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>中奖记录</title>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<link href="$!{resource}/css/common.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<script src="$!{resource}/js/jquery-1.7.2.min.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">中奖记录</h1>
+</header>
+<div class="mui-content">
+#if($!{size}==0)
+ <div class="ecard_box">
+ 	暂无中奖记录
+  </div>
+  #else
+    #foreach($lottery in $lotteryList)
+		#if($!{lottery.trace}!="")
+	    <div class="prize_box">
+	         <div class="prize_pic"> <img src="$!{resource}/images/mall/prize_hg.png"></div>
+	         <div class="prize_name">
+	             <p class="font16">$!{lottery.goodsname}</p>
+	             $!{lottery.intimeStr}
+				#if($!{lottery.receivestate}==0&&$!{lottery.losetimeStr}>${date})
+	            <a class="btn-receive btn_right_blue" data-trace="$!{lottery.trace}">领取</a>
+				#elseif($!{lottery.receivestate}==0&&$!{lottery.losetimeStr}<${date})
+ 					<a class="btn_right_gray">已失效</a>
+ 			    #elseif($!{lottery.receivestate}==1)
+ 					<a class="btn_right_gray">已领取</a>
+				#end
+	        </div>
+	        <div style=" clear:both"></div>
+	    </div>
+	    #else
+	    <div class="prize_box">
+	         <div class="prize_pic"> 积分中奖</div>
+	         <div class="prize_name">
+	             <p class="font16">$!{lottery.goodsname}</p>
+	             $!{lottery.intimeStr}
+	            <a class="btn_right_gray">已领取</a>
+	        </div>
+	        <div style=" clear:both"></div>
+	    </div>
+	    #end
+    #end  
+  #end
+</div>
+<script>
+mui('.btn-receive').tap(function() {
+	var $trace = this.getAttribute('data-trace');
+	mui.ajax('/lottery/receive.htm',{
+				data:{trace:$trace},
+				dataType:'json', //服务器返回json格式数据
+				type:'get', //HTTP请求类型
+				success:function(data){
+					var ret = data.ret;
+					var msg = data.msg;
+					if (ret=="success"){
+						mui.toast('领取成功');
+						location.reload(true);
+					}else {
+						mui.toast('领取失败');
+					}
+				},
+				error:function(xhr,type,errorThrown){
+						//异常处理；
+					}
+			});
+});
+</script>
+</body>
+</html>

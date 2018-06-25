@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>关于我们</title>
+<script>
+// auto adaptation
+(function() {
+	var w = window, d = document, de = d.documentElement, cw = 'clientWidth', ae = 'addEventListener', oc = 'orientationchange', rs = 'resize', dl = 'DOMContentLoaded';
+	var fs = 16, mw = de.getAttribute('data-pagewidth') || 750;
+	var as = function() { if (de[cw]) de.style.fontSize = 100*(de[cw]/mw)*16/fs +'px'; };
+	try { fs = parseInt(w.getComputedStyle(de,null).fontSize || 16, 10); } catch(e) {}
+	w[ae] && w[ae]((oc in w?oc:rs), as, false);
+	d[ae] && d[ae](dl, as, false);
+	as();
+})();
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d9e9535fc6315ff5b6e24dbc5e1ec15";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<link href="$!{resource}/css/mui.min.css" rel="stylesheet"/>
+<script src="$!{resource}/js/mui.min.js"></script>
+<style>
+.aboutus { background-color:#36c; }
+.aboutus h3 { height:2.9rem; margin:0; background:url(../images/index/about/title.jpg) no-repeat center center; background-size:100% 100%; text-indent:-10000px; overflow:hidden; }
+.aboutus .section h4 { height:0.8rem; line-height:0.8rem; background-repeat:no-repeat; background-size:100% 100%; text-align:center; margin:0; font-size:0.32rem; color:#fff; font-weight:400; }
+.aboutus .section img { display:block; width:100%; }
+.aboutus .section .bd p { text-indent:2em; color:#fff; margin:0; padding-top:0.1rem; font-size:0.28rem; line-height:0.5rem; }
+.aboutus .s1 h4 { background-image:url(../images/index/about/t1.jpg); }
+.aboutus .s1 .bd { background:url(../images/index/about/bg1.jpg) no-repeat center center; background-size:100% 100%; min-height:3.3rem; padding:0 0.45rem; }
+.aboutus .s2 h4 { background-image:url(../images/index/about/t2.jpg); }
+.aboutus .s3 h4 { background-image:url(../images/index/about/t3.jpg); height:0.7rem; line-height:0.7rem; padding-top:0.1rem; }
+.aboutus .s3 .bd { background:url(../images/index/about/bg3.jpg) no-repeat center top; background-size:100% auto; padding:0 0.45rem 0.5rem; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">关于我们</h1>
+</header>
+<div class="mui-content aboutus">
+	<h3>关于我们</h3>
+	<div class="section s1">
+		<h4>平台背景</h4>
+		<div class="bd">
+			<p>
+				上海分互链信息技术有限公司是由鑫网易商、建银国际、银联商务、中国银行、中国移动和东方航空联合发起，致力于构建服务中国用户的创新型数字积分通兑通用平台。
+				公司旨在有效地将多种渠道的用户积分进行跨行业的、有价值的线上线下的聚合、消费和流转，打造一家真正的异业积分大联盟。
+			</p>
+		</div>
+	</div>
+	<div class="section s2">
+		<h4>核心优势</h4>
+		<div class="bd">
+			<img src="../images/index/about/bg2.jpg" />
+		</div>
+	</div>
+	<div class="section s3">
+		<h4>团队介绍</h4>
+		<div class="bd">
+			<p>团队核心成员来自PayPal、平安、万达、百度、Ebay等知名金融及互联网公司，具有丰富的积分行业经验。</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>抢积分，兑好礼</title>
+<link href="/css/mui.min.css" rel="stylesheet"/>
+<script src="/js/mui.min.js"></script>
+<style>
+.mui-content { background-color:#FE4E68; }
+.mui-content img { display:block; width:100%; }
+.btns { position:relative; }
+.btns a { position:absolute; top:0; bottom:0; width:50%; }
+.btns a:first-child { left:0; }
+.btns a:last-child { right:0; }
+</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">抢积分，兑好礼</h1>
+</header>
+<div class="mui-content">
+	<img src="/images/index/170417/top.jpg" />
+	<img src="/images/index/170417/t1.jpg" />
+	<img src="/images/index/170417/bg1.jpg" />
+	<div class="btns">
+		<img src="/images/index/170417/lottery.jpg" />
+		<a href="/activity/signin.htm" alt="每日签到"></a>
+		<a href="/lottery/game.htm" alt="积分抽奖"></a>
+	</div>
+	<img src="/images/index/170417/t2.jpg" />
+	<div class="items">
+		<a data-merId="S1000001" data-goodId="3402459490733690"><img src="/images/index/170417/p1.jpg" alt="Thesaem得鲜唇膏" /></a>
+		<a data-merId="S1000001" data-goodId="7004174351051906"><img src="/images/index/170417/p2.jpg" alt="自然乐园芦荟胶" /></a>
+		<a data-merId="S1000001" data-goodId="3030996668875859"><img src="/images/index/170417/p3.jpg" alt="九朵云Cloud9马油霜" /></a>
+		<a data-merId="S1000001" data-goodId="7014787127680208"><img src="/images/index/170417/p4.jpg" alt="NMF针剂水库面目" /></a>
+	</div>
+	<img src="/images/index/170417/bg2.jpg" />
+</div>
+<script>
+// 商品链接跳转
+mui('[data-goodId]').tap(function() {
+	var merId = this.getAttribute('data-merId');
+	var goodId = this.getAttribute('data-goodId');
+	location.href = '/jfmall/goods/'+ goodId +'-'+ merId +'.htm';
+	return false;
+});
+</script>
+</body>
+</html>
